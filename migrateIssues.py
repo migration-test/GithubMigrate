@@ -1,12 +1,6 @@
-import requests
-import os
-import sys
-import json
-import time
-import random
-import time
-from datetime import timedelta
-from pprint import pprint
+import os, sys, requests, json, time, random
+import settings 
+from . import common
 
 sourceuser = sys.argv[1]
 sourcetoken = sys.argv[2]
@@ -14,18 +8,12 @@ targetuser = sys.argv[3]
 targettoken = sys.argv[4]
 orgname = sys.argv[5]
 orgname2 = sys.argv[6]
-reponame = ["pbr"]
+repofile = sys.argv[7]
 rate = ""
-
 params = {}
-headers = {
-    'Accept': 'application/vnd.github.v3+json',
-    'User-Agent': 'python',
-    'Authorization': f'token {sourcetoken}'
-    }
 
 def get_rate_reset():
-    r = requests.get("https://api.github.com/rate_limit", headers=headers)
+    r = requests.get("{settings.base_url}/rate_limit", headers=settings.headers)
     rate = json.loads(r.text)
     if rate["resources"]["core"]["remaining"] >= 2:
         print(f'{rate["resources"]["core"]["remaining"]} API calls until I have to take a break.')
@@ -37,29 +25,20 @@ def get_rate_reset():
         
 
 # Get All Issues from source
+reponame = common.get_repos(repofile)
 for repo in reponame: 
-    query_url = f"https://api.github.com/repos/{orgname}/{repo}/issues"
+    query_url = f"{settings.base_url}/repos/{orgname}/{repo}/issues"
     params = {}
-    headers = {
-        'Accept': 'application/vnd.github.v3+json',
-        'User-Agent': 'python',
-        'Authorization': f'token {sourcetoken}'
-        }
-    r = requests.get(query_url, headers=headers, params=params)
+    r = requests.get(query_url, headers=settings.headers, params=params)
     issues = json.loads(r.text)
-    get_rate_reset()
+    common.get_rate_reset()
 
 
 for issue in issues:
     try:
         json_object = issue
         print (f"JSON is valid, creating issue: ", issue["id"])
-        query_url = f"https://api.github.com/repos/{orgname2}/{repo}/issues"
-        headers = {
-            'Accept': 'application/vnd.github.v3+json',
-            'User-Agent': 'python',
-            'Authorization': f'token {sourcetoken}'
-            }
+        query_url = f"{settings.base_url}/repos/{orgname2}/{repo}/issues"
         payload = {
             "title": issue["title"],
             "body": issue["body"],
@@ -67,8 +46,8 @@ for issue in issues:
         with open("payload.json", "w") as write_payload:
             json.dump(payload, write_payload, indent=2, sort_keys=False)
             write_payload.close()
-        p = requests.request("POST", query_url, data=json.dumps(payload), headers=headers)
-        get_rate_reset()
+        p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.headers)
+        common.get_rate_reset()
         if p.status_code == 201:
             print('Successfully created Issue ID: ', issue["id"])
             time.sleep(random.randrage(1, 5))
