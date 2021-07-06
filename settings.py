@@ -1,12 +1,42 @@
 # Global settings
 
 def init():
-    global headers
-    headers = {
-    'Accept': 'application/vnd.github.v3+json',
-    'User-Agent': 'python',
-    'Authorization': f'token {sourcetoken}'
-    }
-    global base_url
-    base_url = "https://api.github.com"
+
+    global target_url
+    target_url = ""
+
+    global target_repo_url
+    target_repo_url = ""
     
+    global source_url
+    source_url = ""
+
+    global source_repo_url
+    source_repo_url = ""
+
+    global sourcetoken
+    sourcetoken = ""
+
+    global targettoken
+    targettoken = ""
+
+    global sourceuser
+    sourceuser = ""
+
+    global targetuser
+    targetuser = ""
+
+    global targetorg
+    targetorg = ""
+
+    global sourceorg
+    sourceorg = ""
+
+    global repofile
+    repofile = ""
+
+    global source_headers
+    source_headers = ""
+
+    global target_headers
+    target_headers = ""
