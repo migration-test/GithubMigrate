@@ -1,7 +1,7 @@
 # main.py Main entrypoint for migration
 
-import settings, common, argparse, migrateRepo, migrateIssues, time, random
-
+import settings, common, argparse, migrateRepo, migrateIssues, migratePulls, time, random, json
+import pprint 
 
 def init_argparse():
     parser = argparse.ArgumentParser(
@@ -17,6 +17,21 @@ def init_argparse():
         "--issues",
         action='store_true',
         help="This executes issue migration"
+    )
+    parser.add_argument(
+        "--pulls",
+        action='store_true',
+        help="This executes pull request migration"
+    )
+    parser.add_argument(
+        "--cleanup",
+        action='store_true',
+        help="Cleanup Migration Dust"
+    )
+    parser.add_argument(
+        "--debug",
+        action='store_true',
+        help="Debugging"
     )
     parser.add_argument(
         "--sourcepat",
@@ -72,12 +87,10 @@ def main():
     settings.target_repo_url = "github.com"
     settings.source_headers = {
     'Accept': 'application/vnd.github.v3+json',
-    'User-Agent': 'python',
     'Authorization': f'token {settings.sourcetoken}'
     }
     settings.target_headers = {
     'Accept': 'application/vnd.github.v3+json',
-    'User-Agent': 'python',
     'Authorization': f'token {settings.targettoken}'
     }
 
@@ -87,11 +100,29 @@ def main():
         for repo in reponame: 
             migrateRepo.cloneSource(settings.sourceorg, repo, settings.sourceuser, settings.sourcetoken)
             migrateRepo.rewriteRefs(repo)
+            migratePulls.create_branch
             migrateRepo.pushTarget(settings.targetorg, repo, settings.targetuser, settings.targettoken)
     if args.issues:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame: 
             issues = migrateIssues.get_issues(settings.sourceorg, repo)
             migrateIssues.migrate_issues(settings.targetorg, repo, issues)
+    if args.pulls:
+        reponame = common.get_repos(settings.repofile)
+        for repo in reponame:
+            pulls = migratePulls.get_pulls(settings.sourceorg, repo)
+            migratePulls.migrate_pulls(settings.targetorg, repo, pulls)
+    if args.debug:
+        reponame = common.get_repos(settings.repofile)
+        for repo in reponame:
+            data = migrateIssues.get_issues(settings.sourceorg, repo)
+            with open('debug.json', 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+    if args.cleanup:
+        reponame = common.get_repos(settings.repofile)
+        for repo in reponame:
+            common.cleanup(repo)
+
+
 
 main()
