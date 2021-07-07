@@ -1,6 +1,6 @@
 # Common utilities for Migrate Program
 
-import requests, os, sys, json, time, random, time
+import requests, os, sys, json, time, random, time, subprocess
 import settings
 from datetime import timedelta
 from pprint import pprint
@@ -55,5 +55,9 @@ def get_org(orgname):
             return r
     except ValueError as e: 
         print(f"ERROR: {e.message}")
+
+
+def cleanup(repo):
+    subprocess.run('rm -rf ./' + repo + '.git')
 
 
