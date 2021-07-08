@@ -36,7 +36,7 @@ def create_repo(org, repo):
         payload = {}
         payload['name'] = f'{reponame}'
         payload['org'] = f'{orgname}'
-        p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers)
+        p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
         if p.status_code == 201:
             print(f'Repository {reponame} created!')
     except:
