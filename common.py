@@ -7,7 +7,7 @@ from pprint import pprint
 
 # Check for API request rate 
 def get_rate_reset():
-    r = requests.get(f"{settings.target_url}/rate_limit", headers=settings.headers)
+    r = requests.get(f"{settings.target_url}/rate_limit", headers=settings.headers, verify=False)
     rate = json.loads(r.text)
     if rate["resources"]["core"]["remaining"] >= 2:
         print(f'{rate["resources"]["core"]["remaining"]} API calls until I have to take a break.')

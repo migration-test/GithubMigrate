@@ -11,7 +11,7 @@ params = {}
 def get_issues(org, repo):
     query_url = f"https://{settings.source_url}/repos/{org}/{repo}/issues"
     params = {'state': 'all'}
-    r = requests.get(query_url, headers=settings.source_headers, params=params)
+    r = requests.get(query_url, headers=settings.source_headers, params=params, verify=False)
     issues = json.loads(r.text)
     return issues 
 
@@ -23,7 +23,7 @@ def create_issue(org, repo, issue):
         "body": issue["body"],
     }
     print(f"Creating issue {issue['number']}")
-    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers)
+    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
     return p 
 
 def update_issue(org, repo, issue, num):
@@ -32,7 +32,7 @@ def update_issue(org, repo, issue, num):
         "state": issue["state"],
         "labels": issue["labels"]
     }
-    p = requests.request("PATCH", query_url, data=json.dumps(payload), headers=settings.target_headers)
+    p = requests.request("PATCH", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
     return p 
 
 def get_comments(org, repo, issue):
@@ -41,7 +41,7 @@ def get_comments(org, repo, issue):
     params = {
         'per_page': 100
     }    
-    p = requests.get(query_url, headers=settings.source_headers, params=params)
+    p = requests.get(query_url, headers=settings.source_headers, params=params, verify=False)
     c = json.loads(p.text)
     return c
 
@@ -51,7 +51,7 @@ def migrate_comments(org, repo, comment, num):
         "body": comment["body"]
     }
     print(query_url)
-    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers)
+    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
     return p
 
 def migrate_issues(org, repo, issues):

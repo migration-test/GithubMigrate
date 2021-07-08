@@ -5,7 +5,7 @@ import settings, requests, json, time, random
 def get_pulls(org, repo):
     query_url = f"https://{settings.source_url}/repos/{org}/{repo}/pulls"
     params = {'state': 'all'}
-    r = requests.get(query_url, headers=settings.source_headers, params=params)
+    r = requests.get(query_url, headers=settings.source_headers, params=params, verify=False)
     pulls = json.loads(r.text)
     return pulls 
 
@@ -13,7 +13,7 @@ def get_pull(org, repo, pull):
     query_url = f"https://{settings.source_url}/repos/{org}/{repo}/pulls/{pull}"
     params = {}
     print(f"Getting PR number {pull} from {query_url}")
-    r = requests.get(query_url, headers=settings.source_headers, params=params)
+    r = requests.get(query_url, headers=settings.source_headers, params=params, verify=False)
     pull = json.loads(r.text)
     return pull 
 
@@ -23,7 +23,7 @@ def create_branch(org, repo, pull):
         "ref": f"refs/heads/pr{pull['number']}base",
         "sha": f"{pull['base']['sha']}"
     }
-    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers)
+    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
     return p 
 
 def create_head_branch(org, repo, pull):
@@ -32,7 +32,7 @@ def create_head_branch(org, repo, pull):
         "ref": f"refs/heads/pr{pull['number']}head",
         "sha": f"{pull['head']['sha']}"
     }
-    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers)
+    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
     return p 
 
 def create_pulls(org, repo, pull):
@@ -49,7 +49,7 @@ def create_pulls(org, repo, pull):
         payload["head"] = 'refs/heads/master'
     else:
         payload["head"] = f"pr{pull['number']}head"
-    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers)
+    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
     pp = p.json()
     print(f"Created pull {pp['number']}")
     return p 
@@ -59,7 +59,7 @@ def update_pulls(org, repo, pull, num):
     payload = {
         "state": pull["state"],
     }
-    p = requests.request("PATCH", query_url, data=json.dumps(payload), headers=settings.target_headers)
+    p = requests.request("PATCH", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
     return p 
 
 def migrate_pulls(org, repo, pulls):
