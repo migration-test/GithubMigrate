@@ -98,6 +98,7 @@ def main():
     if args.repo:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame: 
+            repo = repo.rstrip()
             migrateRepo.cloneSource(settings.sourceorg, repo, settings.sourceuser, settings.sourcetoken)
             migrateRepo.rewriteRefs(repo)
             migratePulls.create_branch
@@ -105,16 +106,19 @@ def main():
     if args.issues:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame: 
+            repo = repo.rstrip()
             issues = migrateIssues.get_issues(settings.sourceorg, repo)
             migrateIssues.migrate_issues(settings.targetorg, repo, issues)
     if args.pulls:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame:
+            repo = repo.rstrip()
             pulls = migratePulls.get_pulls(settings.sourceorg, repo)
             migratePulls.migrate_pulls(settings.targetorg, repo, pulls)
     if args.debug:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame:
+            repo = repo.rstrip()
             data = migrateIssues.get_issues(settings.sourceorg, repo)
             with open('debug.json', 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
