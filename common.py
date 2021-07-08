@@ -40,7 +40,7 @@ def create_repo(org, repo):
         if p.status_code == 201:
             print(f'Repository {reponame} created!')
     except:
-        print(f"ERROR: Unable to create repository {reponame}.\n")
+        print(f"ERROR: Unable to create repository {reponame}.\n Status Code: {p.status_code} : {p.text}")
 
 
 
