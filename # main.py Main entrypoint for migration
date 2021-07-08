@@ -1,5 +1,0 @@
-# main.py Main entrypoint for migration
-
-import settings, common
-
-settings.init()
