@@ -3,13 +3,6 @@
 import settings, requests, json, time, random, urllib3
 urllib3.disable_warnings()
 
-def get_pulls(org, repo):
-    query_url = f"https://{settings.source_url}/repos/{org}/{repo}/pulls"
-    params = {'state': 'all'}
-    r = requests.get(query_url, headers=settings.source_headers, params=params, verify=False)
-    pulls = r.text
-    print(pulls)
-    return pulls 
 
 def get_pull(org, repo, pull):
     query_url = f"https://{settings.source_url}/repos/{org}/{repo}/pulls/{pull}"
@@ -64,6 +57,8 @@ def update_pulls(org, repo, pull, num):
     p = requests.request("PATCH", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
     return p 
 
+""" 
+TODO: Deprecated, will remove
 def migrate_pulls(org, repo, pulls):
     for pr in pulls:
         try:
@@ -81,4 +76,4 @@ def migrate_pulls(org, repo, pulls):
             else:
                 print(f"Could not create Issue ID: {pr['id']} in {org}/{repo} - Gave status code {p.status_code} {p.text}")
         except ValueError as e:
-            print ("Is valid json? false")
+            print ("Is valid json? false") """
