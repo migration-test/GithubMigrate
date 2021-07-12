@@ -1,9 +1,10 @@
 # Common utilities for Migrate Program
 
-import requests, os, sys, json, time, random, time, subprocess
+import requests, os, sys, json, time, random, time, subprocess, urllib3
 import settings
 from datetime import timedelta
 from pprint import pprint
+urllib3.disable_warnings()
 
 # Check for API request rate 
 def get_rate_reset():
