@@ -1,12 +1,14 @@
 # Migrate pulls 
 
-import settings, requests, json, time, random
+import settings, requests, json, time, random, urllib3
+urllib3.disable_warnings()
 
 def get_pulls(org, repo):
     query_url = f"https://{settings.source_url}/repos/{org}/{repo}/pulls"
     params = {'state': 'all'}
     r = requests.get(query_url, headers=settings.source_headers, params=params, verify=False)
-    pulls = json.loads(r.text)
+    pulls = r.text
+    print(pulls)
     return pulls 
 
 def get_pull(org, repo, pull):
