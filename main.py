@@ -24,11 +24,6 @@ def init_argparse():
         help="This executes issue migration"
     )
     parser.add_argument(
-        "--pulls",
-        action='store_true',
-        help="This executes pull request migration"
-    )
-    parser.add_argument(
         "--cleanup",
         action='store_true',
         help="Cleanup Migration Dust"
@@ -71,7 +66,7 @@ def init_argparse():
     parser.add_argument(
         "--file",
         help="File containing reponames",
-        required=True
+        required=False
     )
     return parser
 
@@ -87,8 +82,8 @@ def main():
     settings.sourceorg = args.sourceorg
     settings.target_url = "api.github.com"
     settings.source_url = "github.build.ge.com/api/v3"
-    #settings.source_url = "api.github.com"
-    settings.source_repo_url = "github.build.ge.com"
+    settings.source_url = "api.github.com"
+    #settings.source_repo_url = "github.build.ge.com"
     settings.target_repo_url = "github.com"
     settings.source_headers = {
     'Authorization': f'token {settings.sourcetoken}'
@@ -99,7 +94,7 @@ def main():
     }
 
     if args.generaterepofile: 
-        common.get_org_repos(settings.org)
+        common.get_org_repos(settings.sourceorg)
     if args.repo:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame: 
@@ -114,12 +109,6 @@ def main():
             repo = repo.rstrip()
             issues = migrateIssues.get_issues(settings.sourceorg, repo)
             migrateIssues.migrate_issues(settings.targetorg, repo, issues)
-    if args.pulls:
-        reponame = common.get_repos(settings.repofile)
-        for repo in reponame:
-            repo = repo.rstrip()
-            pulls = migratePulls.get_pulls(settings.sourceorg, repo)
-            migratePulls.migrate_pulls(settings.targetorg, repo, pulls)
     if args.debug:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame:
