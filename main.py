@@ -81,12 +81,11 @@ def main():
     settings.targetorg = args.targetorg
     settings.sourceorg = args.sourceorg
     settings.target_url = "api.github.com"
-    settings.source_url = "github.build.ge.com"
+    settings.source_url = "github.build.ge.com/api/v3"
     #settings.source_url = "api.github.com"
     settings.source_repo_url = "github.build.ge.com"
     settings.target_repo_url = "github.com"
     settings.source_headers = {
-    'Accept': 'application/vnd.github.v3+json',
     'Authorization': f'token {settings.sourcetoken}'
     }
     settings.target_headers = {
@@ -120,8 +119,8 @@ def main():
         for repo in reponame:
             repo = repo.rstrip()
             data = migrateIssues.get_issues(settings.sourceorg, repo)
-            with open('debug.json', 'w', encoding='utf-8') as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
+            #with open('debug.json', 'w', encoding='utf-8') as f:
+            #    json.dump(data, f, ensure_ascii=False, indent=2)
     if args.cleanup:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame:
