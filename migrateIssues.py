@@ -12,9 +12,12 @@ params = {}
 # Get All Issues from source
 def get_issues(org, repo):
     query_url = f"https://{settings.source_url}/repos/{org}/{repo}/issues"
-    params = {'state': 'all'}
+    params = {'state': 'all', 'filter': 'all', 'direction': 'asc', 'per_page': 100, 'page': 1}
     r = requests.get(query_url, headers=settings.source_headers, params=params, verify=False)
     issues = json.loads(r.text)
+    while 'next' in r.links.keys():
+        r = requests.get(r.links['next']['url'], settings.source_headers, verify=False)
+        issues.update(json.loads(r.text))
     return issues 
 
 
@@ -41,10 +44,13 @@ def get_comments(org, repo, issue):
     num = issue['number']
     query_url = f"https://{settings.source_url}/repos/{org}/{repo}/issues/{num}/comments"
     params = {
-        'per_page': 100
+        'per_page': 100, 'page': 1
     }    
     p = requests.get(query_url, headers=settings.source_headers, params=params, verify=False)
     c = json.loads(p.text)
+    while 'next' in p.links.keys():
+        p = requests.get(p.links['next']['url'], headers=settings.source_headers, verify=False)
+        c.update(json.loads(p.text))
     return c
 
 def migrate_comments(org, repo, comment, num):
