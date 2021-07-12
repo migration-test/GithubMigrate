@@ -9,8 +9,7 @@ GithubMigrate can be used to migrate from Github Enterprise to Github Cloud or b
 - [ ] Organization created & Configurated in target Github (This step will go away in future release)
 - [ ] Private access tokens for each Github account (See [Create a Private Access Token](#create-a-private-access-token))
 - [ ] Install python modules (See [Install python modules](#install-python-modules))
-- [ ] Generate repofile with list of repo's to be migrated, 1 on each line
-
+- [ ] Generate repofile with list of repo's to be migrated (See [Generate Repo File](#generate-repo-file))
 
 ### Create a private access token
 
@@ -31,6 +30,14 @@ GithubMigrate can be used to migrate from Github Enterprise to Github Cloud or b
 To install the required python modules execute the following command from inside the GithubMigrate directory.
 
 `pip install -f .\requirements.txt`
+
+## Generate Repo File
+To generate a list of repo's for an organization prior to running a migration, run the command for the migration like this. 
+`python .\main.py --sourcepat <Source Personal Access Token> --sourceuser <Source Username> --sourceorg <Source Org> --targetpat <Target Personal Access Token> --targetuser <Target Username> --targetorg <Target Organization Name> --file <Path to list of repo's> --generaterepofile`
+
+Example: `python .\main.py --sourcepat a5453d243b2e6fd9fc3fasdfawerf879aa --sourceuser 501649102 --sourceorg FooOrg --targetpat ghp_FAV4R33zocb3RkRJOLXzasdfNasdfdxrf --targetuser oscarthegrouch --targetorg BarOrg --generaterepofile`
+
+This will generate a file at .\repofile.txt - review this file and remove any repo's you do not want migrated. 
 
 ## Execute Migration
 
