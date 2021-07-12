@@ -1,6 +1,8 @@
 import os, sys, requests, json, time, random, migratePulls
 import settings 
 import common
+import urllib3
+urllib3.disable_warnings()
 
 
 rate = ""
@@ -66,9 +68,21 @@ def migrate_issues(org, repo, issues):
                 issue["head"] = pr["head"]
                 issue["merged_at"] = pr["merged_at"]
                 b = migratePulls.create_branch(org, repo, issue)
+                if b.status_code == 201:
+                    print("Base branch created!")
+                else:
+                    print(f"Branch could not be created: {b.status_code} : {b.text}")
                 h = migratePulls.create_head_branch(org, repo, issue)
+                if h.status_code == 201:
+                    print("Head branch created!")
+                else:
+                    print(f"Head branch could not be created: {h.status_code} : {h.text}")
                 p = migratePulls.create_pulls(org, repo, issue)
-                pp = p.json()
+                if p.status_code == 201:
+                    print("Pull created!")
+                    pp = p.json()
+                else: 
+                    print(f"Unable to create pull: {p.status_code} : {p.text}")
             else:
                 p = create_issue(org, repo, issue)
                 pp = p.json()
@@ -87,7 +101,7 @@ def migrate_issues(org, repo, issues):
                             print(f"{c.status_code} : {c.text}") 
                 else:
                     time.sleep(2)
-                    num = pp['number']
+                    num = p['number']
                     u = update_issue(org, repo, issue, num)
                     comments = get_comments(settings.sourceorg, repo, issue)
                     for comment in comments:
