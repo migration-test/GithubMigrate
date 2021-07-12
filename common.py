@@ -43,7 +43,9 @@ def create_repo(org, repo):
     except:
         print(f"ERROR: Unable to create repository {reponame}.\n Status Code: {p.status_code} : {p.text}")
 
-
+def get_org_repos(org):
+    query_url = f"https://{settings.source_url}/orgs/{org}/repos"
+    p = requests.get(query_url, )
 
 # Check if org exists
 def get_org(orgname):

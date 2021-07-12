@@ -9,6 +9,11 @@ def init_argparse():
         description="Migrate repositories in Github."
     )
     parser.add_argument(
+        "--generaterepofile",
+        action='store_true',
+        help="Generates repofile.txt with list of repos to migrate"
+    )
+    parser.add_argument(
         "--repo",
         action='store_true',
         help="This executes the repo migration."   
@@ -93,7 +98,8 @@ def main():
     'Authorization': f'token {settings.targettoken}'
     }
 
-
+    if args.generaterepofile: 
+        common.get_org_repos(settings.org)
     if args.repo:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame: 
