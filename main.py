@@ -71,8 +71,8 @@ def main():
     settings.sourceorg = args.sourceorg
     settings.target_url = "api.github.com"
     settings.source_url = "github.build.ge.com/api/v3"
-    settings.source_url = "api.github.com"
-    #settings.source_repo_url = "github.build.ge.com"
+    #settings.source_url = "api.github.com"
+    settings.source_repo_url = "github.build.ge.com"
     settings.target_repo_url = "github.com"
     settings.source_headers = {
     'Authorization': f'token {settings.sourcetoken}'
