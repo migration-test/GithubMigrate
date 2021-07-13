@@ -70,8 +70,13 @@ It does not include: repository settings or the wiki
 1. Ensure all information is available from the prerequisites.
 1. Ensure that a `repofile.txt` file has been created.
 1. Run the below command to start migration. Status updates will be returned via the console window.
-    > Tip: Run in smaller batches so manual verification can be performed.
 
-    `python .\main.py --sourcepat <Source Personal Access Token> --sourceuser <Source Username> --sourceorg <Source Org> --targetpat <Target Personal Access Token> --targetuser <Target Username> --targetorg <Target Organization Name> --file <Path to list of repo's> --repo --issues`
+    `python .\main.py --sourcepat <Source Personal Access Token> --sourceuser <Source Username> --sourceorg <Source Org> --targetpat <Target Personal Access Token> --targetuser <Target Username> --targetorg <Target Organization Name> --migrate`
 
-    Example: `python .\main.py --sourcepat a5453d243b2e6fd9fc3fasdfawerf879aa --sourceuser 501649102 --sourceorg FooOrg --targetpat ghp_FAV4R33zocb3RkRJOLXzasdfNasdfdxrf --targetuser oscarthegrouch --targetorg BarOrg --file repofile.txt --repo --issues`
+    Example: `python .\main.py --sourcepat a5453d243b2e6fd9fc3fasdfawerf879aa --sourceuser 501649102 --sourceorg FooOrg --targetpat ghp_FAV4R33zocb3RkRJOLXzasdfNasdfdxrf --targetuser oscarthegrouch --targetorg BarOrg --migrate`
+
+    > Tip: Run in smaller batches so manual verification can be performed by splitting your repofile into smaller chunks and specifying with the --file command for each file.
+
+    `python .\main.py --sourcepat <Source Personal Access Token> --sourceuser <Source Username> --sourceorg <Source Org> --targetpat <Target Personal Access Token> --targetuser <Target Username> --targetorg <Target Organization Name> --file <path to repo file> --migrate`
+
+    Example: `python .\main.py --sourcepat a5453d243b2e6fd9fc3fasdfawerf879aa --sourceuser 501649102 --sourceorg FooOrg --targetpat ghp_FAV4R33zocb3RkRJOLXzasdfNasdfdxrf --targetuser oscarthegrouch --targetorg BarOrg --file repofile1.txt --migrate`
