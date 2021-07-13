@@ -7,7 +7,8 @@ GithubMigrate can be used to migrate from Github Enterprise to Github Cloud or b
 - [ ] Python 3.6.x
 - [ ] User account in both target and source Github's
 - [ ] Organization created & Configurated in target Github (This step will go away in future release)
-- [ ] Private access tokens for each Github account (See [Create a Private Access Token](#create-a-private-access-token))
+- [ ] Personal access token for source GE Github account (See [Create a Personal Access Tokens](#create-a-personal-access-tokens))
+- [ ] Personal access tokens for target Normal Github account (See [Create a Personal Access Tokens](#create-a-personal-access-tokens))
 - [ ] Install python modules (See [Install python modules](#install-python-modules))
 - [ ] Generate repofile with list of repo's to be migrated (See [Generate Repo File](#generate-repo-file))
 
