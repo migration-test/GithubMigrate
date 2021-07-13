@@ -17,7 +17,7 @@ def get_issues(org, repo):
     issues = json.loads(r.text)
     while 'next' in r.links.keys():
         r = requests.get(r.links['next']['url'], settings.source_headers, verify=False)
-        issues.update(json.loads(r.text))
+        issues.append(json.loads(r.text))
     return issues 
 
 
@@ -50,7 +50,7 @@ def get_comments(org, repo, issue):
     c = json.loads(p.text)
     while 'next' in p.links.keys():
         p = requests.get(p.links['next']['url'], headers=settings.source_headers, verify=False)
-        c.update(json.loads(p.text))
+        c.append(json.loads(p.text))
     return c
 
 def migrate_comments(org, repo, comment, num):
