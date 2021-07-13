@@ -14,19 +14,9 @@ def init_argparse():
         help="Generates repofile.txt with list of repos to migrate"
     )
     parser.add_argument(
-        "--repo",
+        "--migrate",
         action='store_true',
         help="This executes the repo migration."   
-    )
-    parser.add_argument(
-        "--issues",
-        action='store_true',
-        help="This executes issue migration"
-    )
-    parser.add_argument(
-        "--cleanup",
-        action='store_true',
-        help="Cleanup Migration Dust"
     )
     parser.add_argument(
         "--debug",
@@ -77,7 +67,6 @@ def main():
     settings.targettoken = args.targetpat
     settings.sourceuser = args.sourceuser
     settings.targetuser = args.targetuser
-    settings.repofile = args.file
     settings.targetorg = args.targetorg
     settings.sourceorg = args.sourceorg
     settings.target_url = "api.github.com"
@@ -95,7 +84,11 @@ def main():
 
     if args.generaterepofile: 
         common.get_org_repos(settings.sourceorg)
-    if args.repo:
+    if args.file:
+        settings.repofile = args.file
+    else:
+        settings.repofile = "repofile.txt"
+    if args.migrate:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame: 
             repo = repo.rstrip()
@@ -103,10 +96,6 @@ def main():
             migrateRepo.rewriteRefs(repo)
             migratePulls.create_branch
             migrateRepo.pushTarget(settings.targetorg, repo, settings.targetuser, settings.targettoken)
-    if args.issues:
-        reponame = common.get_repos(settings.repofile)
-        for repo in reponame: 
-            repo = repo.rstrip()
             issues = migrateIssues.get_issues(settings.sourceorg, repo)
             migrateIssues.migrate_issues(settings.targetorg, repo, issues)
     if args.debug:
@@ -116,10 +105,7 @@ def main():
             data = migrateIssues.get_issues(settings.sourceorg, repo)
             #with open('debug.json', 'w', encoding='utf-8') as f:
             #    json.dump(data, f, ensure_ascii=False, indent=2)
-    if args.cleanup:
-        reponame = common.get_repos(settings.repofile)
-        for repo in reponame:
-            common.cleanup(repo)
+
 
 
 
