@@ -47,22 +47,28 @@ def get_org_repos(org):
     query_url = f"https://{settings.source_url}/orgs/{org}/repos"
     params = { 'type': 'all', 'per_page': 100, 'page': 1 }
     p = requests.get(query_url, headers=settings.source_headers, params=params, verify=False)
-    repos = json.loads(p.text)
-    file = open("repofile.txt", "a+")
-    for repo in repos:
-        file.write(f"{repo['name']}\n")
-    file.close()
-    while 'next' in p.links.keys():
-        p=requests.get(p.links['next']['url'], headers=settings.source_headers)
-        try: 
-            file = open("repofile.txt", "a+")
-            repos = json.loads(p.text) 
-            for repo in repos:
-                file.write(f"{repo['name']}\n")
-        except:
-            print("ERROR: Unable to write to file.")
-    file.close()
-
+    if p.status_code == 200:
+        repos = json.loads(p.text)
+        file = open("repofile.txt", "a+")
+        for repo in repos:
+            file.write(f"{repo['name']}\n")
+        file.close()
+        while 'next' in p.links.keys():
+            p = requests.get(p.links['next']['url'], headers=settings.source_headers)
+            if p.status_code == 200:
+                try: 
+                    file = open("repofile.txt", "a+")
+                    repos = json.loads(p.text) 
+                    for repo in repos:
+                        file.write(f"{repo['name']}\n")
+                except:
+                    print("ERROR: Unable to write to file.")
+            else:
+                print(f"ERROR: {p.status_code} : {p.text}")
+        else:
+            file.close()
+    else:
+        print(f"ERROR: {p.status_code} : {p.text}")
 
 # Check if org exists
 def get_org(orgname):
