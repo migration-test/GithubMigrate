@@ -121,5 +121,5 @@ def main():
             if d.status_code == 204:
                 print(f"Deleted repo {repo} on target!")
             else: 
-                print(f"Error, unable to delete {repo}.\n Code: {d.status_code} : {d.text}")
+                print(f"Error, unable to delete {repo}.\n Code: {d.status_code} : {d.text}\n Headers:\n{d.headers}")
 main()
