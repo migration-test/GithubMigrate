@@ -98,6 +98,7 @@ def main():
             migrateRepo.pushTarget(settings.targetorg, repo, settings.targetuser, settings.targettoken)
             issues = migrateIssues.get_issues(settings.sourceorg, repo)
             migrateIssues.migrate_issues(settings.targetorg, repo, issues)
+            common.cleanup(repo)
     if args.debug:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame:

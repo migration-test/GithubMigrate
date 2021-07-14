@@ -1,9 +1,9 @@
 # Common utilities for Migrate Program
 
-import requests, os, sys, json, time, random, time, subprocess, urllib3
+import requests, os, sys, json, time, random, time, subprocess, urllib3, shutil
 import settings
 from datetime import timedelta
-from pprint import pprint
+
 urllib3.disable_warnings()
 
 # Check for API request rate 
@@ -84,6 +84,6 @@ def get_org(orgname):
 
 
 def cleanup(repo):
-    subprocess.run('rm -rf ./' + repo + '.git')
+    shutil.rmtree(f"{repo}.git")
 
 
