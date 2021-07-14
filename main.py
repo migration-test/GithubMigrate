@@ -58,7 +58,7 @@ def init_argparse():
         help="File containing reponames",
         required=False
     )
-    argparse.add_argument(
+    parser.add_argument(
         "--ryesiamsure",
         help=argparse.SUPPRESS,
         required=False,
