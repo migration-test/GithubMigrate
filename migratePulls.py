@@ -31,20 +31,15 @@ def create_head_branch(org, repo, pull):
     return p 
 
 def delete_branch(org, repo, pull):
-    query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}/git/refs"
-    head_payload = {
-        "ref": f"refs/heads/pr{pull['number']}head"
-    }
-    base_payload = {
-        "ref": f"refs/heads/pr{pull['number']}base"
-    }
-    h = requests.delete(query_url, data=json.dumps(head_payload), headers=settings.target_headers, verify=False)
-    if h.status_code == 200: 
+    head_query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}/git/refs/heads/pr{pull['number']}head"
+    base_query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}/git/refs/heads/pr{pull['number']}base"
+    h = requests.delete(head_query_url, headers=settings.target_headers, verify=False)
+    if h.status_code == 204: 
         print(f"Head branch for PR{pull['number']} deleted!")
     else: 
         print(f"Unable to remove head branch for PR{pull['number']}, you will need to delete manually.\n{h.status_code} : {h.text}")
-    b = requests.delete(query_url, data=json.dumps(base_payload), headers=settings.target_headers, verify=False)
-    if b.status_code == 200: 
+    b = requests.delete(base_query_url, headers=settings.target_headers, verify=False)
+    if b.status_code == 204: 
         print(f"Base branch for PR{pull['number']} deleted!")
     else: 
         print(f"Unable to remove base branch for PR{pull['number']}, you will need to delete manually.\n{b.status_code} : {b.text}")
