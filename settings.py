@@ -2,17 +2,17 @@
 
 def init():
 
-    global target_url
-    target_url = ""
+    global target_api_url
+    target_api_url = ""
 
-    global target_repo_url
-    target_repo_url = ""
+    global target_instance_url
+    target_instance_url = ""
     
-    global source_url
-    source_url = ""
+    global source_api_url
+    source_api_url = ""
 
-    global source_repo_url
-    source_repo_url = ""
+    global source_instance_url
+    source_instance_url = ""
 
     global sourcetoken
     sourcetoken = ""

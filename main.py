@@ -69,11 +69,11 @@ def main():
     settings.targetuser = args.targetuser
     settings.targetorg = args.targetorg
     settings.sourceorg = args.sourceorg
-    settings.target_url = "api.github.com"
-    settings.source_url = "github.build.ge.com/api/v3"
-    #settings.source_url = "api.github.com"
-    settings.source_repo_url = "github.build.ge.com"
-    settings.target_repo_url = "github.com"
+    settings.target_api_url = "api.github.com"
+    settings.source_api_url = "github.build.ge.com/api/v3"
+    #settings.source_api_url = "api.github.com"
+    settings.source_instance_url = "github.build.ge.com"
+    settings.target_instance_url = "github.com"
     settings.source_headers = {
     'Authorization': f'token {settings.sourcetoken}'
     }

@@ -5,7 +5,7 @@ urllib3.disable_warnings()
 
 
 def get_pull(org, repo, pull):
-    query_url = f"https://{settings.source_url}/repos/{org}/{repo}/pulls/{pull}"
+    query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}/pulls/{pull}"
     params = {}
     print(f"Getting PR number {pull} from {query_url}")
     r = requests.get(query_url, headers=settings.source_headers, params=params, verify=False)
@@ -13,7 +13,7 @@ def get_pull(org, repo, pull):
     return pull 
 
 def create_branch(org, repo, pull):
-    query_url = f"https://{settings.target_url}/repos/{org}/{repo}/git/refs"
+    query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}/git/refs"
     payload = {
         "ref": f"refs/heads/pr{pull['number']}base",
         "sha": f"{pull['base']['sha']}"
@@ -22,7 +22,7 @@ def create_branch(org, repo, pull):
     return p 
 
 def create_head_branch(org, repo, pull):
-    query_url = f"https://{settings.target_url}/repos/{org}/{repo}/git/refs"
+    query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}/git/refs"
     payload = {
         "ref": f"refs/heads/pr{pull['number']}head",
         "sha": f"{pull['head']['sha']}"
@@ -30,8 +30,11 @@ def create_head_branch(org, repo, pull):
     p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
     return p 
 
+
+
+
 def create_pulls(org, repo, pull):
-    query_url = f"https://{settings.target_url}/repos/{org}/{repo}/pulls"  
+    query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}/pulls"  
     payload = {
         "title": pull["title"],
         "body": pull["body"],
@@ -50,7 +53,7 @@ def create_pulls(org, repo, pull):
     return p 
 
 def update_pulls(org, repo, pull, num):
-    query_url = f"https://{settings.target_url}/repos/{org}/{repo}/pulls/{num}"  
+    query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}/pulls/{num}"  
     payload = {
         "state": pull["state"],
     }
