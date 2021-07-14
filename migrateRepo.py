@@ -30,6 +30,7 @@ def pushTarget(org, repo, user, pat):
 
 def delete_repo(org, repo):
     query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}"
-    print(f"{query_url}")
     d = requests.request("DELETE", query_url, headers=settings.target_headers, verify=False)
+    print(d.request.url)
+    print(d.request.body)
     return d
