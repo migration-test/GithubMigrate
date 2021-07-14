@@ -1,14 +1,14 @@
 # Common utilities for Migrate Program
 
-import requests, os, sys, json, time, random, time, subprocess, urllib3
+import requests, os, sys, json, time, random, time, subprocess, urllib3, shutil, stat
 import settings
 from datetime import timedelta
-from pprint import pprint
+
 urllib3.disable_warnings()
 
 # Check for API request rate 
 def get_rate_reset():
-    r = requests.get(f"{settings.target_url}/rate_limit", headers=settings.headers, verify=False)
+    r = requests.get(f"{settings.target_api_url}/rate_limit", headers=settings.headers, verify=False)
     rate = json.loads(r.text)
     if rate["resources"]["core"]["remaining"] >= 2:
         print(f'{rate["resources"]["core"]["remaining"]} API calls until I have to take a break.')
@@ -32,7 +32,7 @@ def get_repos(filename):
 def create_repo(org, repo):
     reponame = repo
     orgname = org
-    query_url = f"https://{settings.target_url}/orgs/{orgname}/repos"
+    query_url = f"https://{settings.target_api_url}/orgs/{orgname}/repos"
     try:
         payload = {}
         payload['name'] = f'{reponame}'
@@ -44,7 +44,7 @@ def create_repo(org, repo):
         print(f"ERROR: Unable to create repository {reponame}.\n Status Code: {p.status_code} : {p.text}")
 
 def get_org_repos(org):
-    query_url = f"https://{settings.source_url}/orgs/{org}/repos"
+    query_url = f"https://{settings.source_api_url}/orgs/{org}/repos"
     params = { 'type': 'all', 'per_page': 100, 'page': 1 }
     p = requests.get(query_url, headers=settings.source_headers, params=params, verify=False)
     if p.status_code == 200:
@@ -82,8 +82,11 @@ def get_org(orgname):
     except ValueError as e: 
         print(f"ERROR: {e.message}")
 
+def remove_writeprotect(func, path, _):
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
 
 def cleanup(repo):
-    subprocess.run('rm -rf ./' + repo + '.git')
+    shutil.rmtree(f"{repo}.git", onerror=remove_writeprotect)
 
 

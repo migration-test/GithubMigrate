@@ -11,7 +11,7 @@ params = {}
 
 # Get All Issues from source
 def get_issues(org, repo):
-    query_url = f"https://{settings.source_url}/repos/{org}/{repo}/issues"
+    query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}/issues"
     params = {'state': 'all', 'filter': 'all', 'direction': 'asc', 'per_page': 100, 'page': 1}
     r = requests.get(query_url, headers=settings.source_headers, params=params, verify=False)
     issues = json.loads(r.text)
@@ -22,7 +22,7 @@ def get_issues(org, repo):
 
 
 def create_issue(org, repo, issue):
-    query_url = f"https://{settings.target_url}/repos/{org}/{repo}/issues"
+    query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}/issues"
     payload = {
         "title": issue["title"],
         "body": issue["body"],
@@ -32,7 +32,7 @@ def create_issue(org, repo, issue):
     return p 
 
 def update_issue(org, repo, issue, num):
-    query_url = f"https://{settings.target_url}/repos/{org}/{repo}/issues/{num}"
+    query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}/issues/{num}"
     payload = {
         "state": issue["state"],
         "labels": issue["labels"]
@@ -42,7 +42,7 @@ def update_issue(org, repo, issue, num):
 
 def get_comments(org, repo, issue):
     num = issue['number']
-    query_url = f"https://{settings.source_url}/repos/{org}/{repo}/issues/{num}/comments"
+    query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}/issues/{num}/comments"
     params = {
         'per_page': 100, 'page': 1
     }    
@@ -54,7 +54,7 @@ def get_comments(org, repo, issue):
     return c
 
 def migrate_comments(org, repo, comment, num):
-    query_url = f"https://{settings.target_url}/repos/{org}/{repo}/issues/{num}/comments"
+    query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}/issues/{num}/comments"
     payload = {
         "body": comment["body"]
     }
