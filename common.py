@@ -1,6 +1,6 @@
 # Common utilities for Migrate Program
 
-import requests, os, sys, json, time, random, time, subprocess, urllib3, shutil
+import requests, os, sys, json, time, random, time, subprocess, urllib3, shutil, stat
 import settings
 from datetime import timedelta
 
@@ -82,8 +82,11 @@ def get_org(orgname):
     except ValueError as e: 
         print(f"ERROR: {e.message}")
 
+def remove_writeprotect(func, path, _):
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
 
 def cleanup(repo):
-    shutil.rmtree(f"{repo}.git")
+    shutil.rmtree(f"{repo}.git", onerror=remove_writeprotect)
 
 
