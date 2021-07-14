@@ -117,6 +117,7 @@ def main():
     if args.ryesiamsure:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame:
+            repo = repo.rstrip()
             d = migrateRepo.delete_repo(settings.targetorg, repo)
             if d.status_code == 204:
                 print(f"Deleted repo {repo} on target!")
