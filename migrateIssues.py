@@ -86,11 +86,7 @@ def migrate_issues(org, repo, issues):
                 p = migratePulls.create_pulls(org, repo, issue)
                 if p.status_code == 201:
                     print("Pull created!")
-                    d = migratePulls.delete_branch(org, repo, issue)
-                    if d.status_code == 201:
-                        print("Deleted branches from target")
-                    else: 
-                        print(f"I had issues deleting the head and base branches.\nCode: {d.status_code} Message: {d.text}")
+                    migratePulls.delete_branch(org, repo, issue)
                     pp = p.json()
                 else: 
                     print(f"Unable to create pull: {p.status_code} : {p.text}")
