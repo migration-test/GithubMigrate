@@ -58,6 +58,14 @@ def init_argparse():
         help="File containing reponames",
         required=False
     )
+    parser.add_argument(
+        "--ryesiamsure",
+        help=argparse.SUPPRESS,
+        required=False,
+        action='store_true',
+        default=False
+    )
+
     return parser
 
 def main():
@@ -106,5 +114,13 @@ def main():
             data = migrateIssues.get_issues(settings.sourceorg, repo)
             #with open('debug.json', 'w', encoding='utf-8') as f:
             #    json.dump(data, f, ensure_ascii=False, indent=2)
-
+    if args.ryesiamsure:
+        reponame = common.get_repos(settings.repofile)
+        for repo in reponame:
+            repo = repo.rstrip()
+            d = migrateRepo.delete_repo(settings.targetorg, repo)
+            if d.status_code == 204:
+                print(f"Deleted repo {repo} on target!")
+            else: 
+                print(f"Error, unable to delete {repo}.\n Code: {d.status_code} : {d.text}\n Headers:\n{d.headers}")
 main()

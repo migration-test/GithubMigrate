@@ -3,6 +3,7 @@
 import subprocess
 import settings
 import common
+import requests
 
 def cloneSource(org, repo, user, pat):
     sourceuser = f"{user}:{pat}"
@@ -26,3 +27,8 @@ def pushTarget(org, repo, user, pat):
     cloneurl = f"https://{targetuser}@{targetrepo}/{org}/{repo}"
     common.create_repo(org, repo)
     subprocess.run(f'git push {cloneurl} --mirror', cwd=f'.\{repo}.git', shell=True)
+
+def delete_repo(org, repo):
+    query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}"
+    d = requests.request("DELETE", query_url, headers=settings.target_headers, verify=False)
+    return d
