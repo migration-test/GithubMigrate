@@ -30,7 +30,17 @@ def create_head_branch(org, repo, pull):
     p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
     return p 
 
-
+def delete_branch(org, repo, pull):
+    query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}/git/refs"
+    head_payload = {
+        "ref": f"refs/heads/pr{pull['number']}head"
+    }
+    base_payload = {
+        "ref": f"refs/heads/pr{pull['number']}base"
+    }
+    h = requests.delete(query_url, data=json.dumps(head_payload), headers=settings.target_headers, verify=False)
+    b = requests.delete(query_url, data=json.dumps(base_payload), headers=settings.target_headers, verify=False)
+    
 
 
 def create_pulls(org, repo, pull):
