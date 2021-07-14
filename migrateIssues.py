@@ -107,7 +107,7 @@ def migrate_issues(org, repo, issues):
                             print(f"{c.status_code} : {c.text}") 
                 else:
                     time.sleep(2)
-                    num = p['number']
+                    num = pp['number']
                     u = update_issue(org, repo, issue, num)
                     comments = get_comments(settings.sourceorg, repo, issue)
                     for comment in comments:
