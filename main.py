@@ -71,7 +71,7 @@ def init_argparse():
         "--cafile",
         help="Path to CA File",
         required = False,
-        default='.\temp-cert-dir\ca-bundle.crt'
+        default='temp-cert-dir\ca-bundle.crt'
     )
 
     return parser
