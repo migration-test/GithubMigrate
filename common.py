@@ -33,12 +33,26 @@ def create_repo(org, repo, source):
     reponame = repo
     orgname = org
     source = source 
+    if source['visbility'] is "public":
+        visbility = "internal"
+    else: 
+        visbility = source['visbility']
     query_url = f"https://{settings.target_api_url}/orgs/{orgname}/repos"
     try:
         payload = {}
         payload['name'] = f'{reponame}'
         payload['org'] = f'{orgname}'
         payload['description'] = source['description']
+        payload['homepage'] = source['homepage']
+        payload['private'] = source['private']
+        payload['visbility'] = visbility
+        payload['has_issues'] = source['has_issues']
+        payload['has_projects'] = source['has_projects']
+        payload['has_wiki'] = source['has_wiki']
+        payload['allow_squash_merge'] = source['allow_squash_merge']
+        payload['allow_merge_commit'] = source['allow_merge_commit']
+        payload['allow_rebase_merge'] = source['allow_rebase_merge']
+        payload['delete_branch_on_merge'] = source['delete_branch_on_merge']
         p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
         if p.status_code == 201:
             print(f'Repository {reponame} created!')
