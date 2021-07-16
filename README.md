@@ -80,3 +80,9 @@ It does not include: repository settings or the wiki
     `python .\main.py --sourcepat <Source Personal Access Token> --sourceuser <Source Username> --sourceorg <Source Org> --targetpat <Target Personal Access Token> --targetuser <Target Username> --targetorg <Target Organization Name> --file <path to repo file> --migrate`
 
     Example: `python .\main.py --sourcepat a5453d243b2e6fd9fc3fasdfawerf879aa --sourceuser 501649102 --sourceorg FooOrg --targetpat ghp_FAV4R33zocb3RkRJOLXzasdfNasdfdxrf --targetuser oscarthegrouch --targetorg BarOrg --file repofile1.txt --migrate`
+    
+## Known Limitations
+* References to issues numbers may change. Github will not let us force the issue #
+* Images and attachments to comments/issues cannot be migrated
+* Releases are not currently migrated this will be resolved with (See [Issue 9](https://github.com/Capgemini-test-import/GithubMigrate/issues/9))
+* Wiki does not currently transfer automatically (See [Issue 7](https://github.com/Capgemini-test-import/GithubMigrate/issues/7))
