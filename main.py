@@ -130,6 +130,8 @@ def main():
             d = migrateRepo.delete_repo(settings.targetorg, repo)
             if d.status_code == 204:
                 print(f"Deleted repo {repo} on target!")
+            elif d.status_code == 404:
+                print(f"Repository {repo} does not exist!")
             else: 
                 print(f"Error, unable to delete {repo}.\n Code: {d.status_code} : {d.text}\n Headers:\n{d.headers}")
 main()
