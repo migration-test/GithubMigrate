@@ -49,10 +49,6 @@ def create_repo(org, repo, source):
         payload['has_issues'] = source['has_issues']
         payload['has_projects'] = source['has_projects']
         payload['has_wiki'] = source['has_wiki']
-        payload['allow_squash_merge'] = source['allow_squash_merge']
-        payload['allow_merge_commit'] = source['allow_merge_commit']
-        payload['allow_rebase_merge'] = source['allow_rebase_merge']
-        payload['delete_branch_on_merge'] = source['delete_branch_on_merge']
         p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
         if p.status_code == 201:
             print(f'Repository {reponame} created!')
