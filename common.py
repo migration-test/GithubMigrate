@@ -87,15 +87,18 @@ def get_org_repos(org):
         print(f"ERROR: {p.status_code} : {p.text}")
 
 def get_source_repo_info(org, repo):
+    headers = settings.source_headers
+    headers['Accept'] = 'application/vnd.github.nebula-preview+json'
     query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}"
-    r = requests.get(query_url, settings.source_headers)
+    r = requests.get(query_url, headers=headers)
     if r.status_code == 200:
-        r = r.json()
+        resp = json.loads(r.text)
+        return resp
     elif r.status_code == 403:
         print(f"Access to {org}/{repo} is forbidden.")
     else:
         print(f"Unable to find repo {org}/{repo}")
-    return r
+    
 
 
 # Check if org exists
