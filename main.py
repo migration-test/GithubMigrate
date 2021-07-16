@@ -67,6 +67,11 @@ def init_argparse():
         action='store_true',
         default=False
     )
+    parser.add_argument(
+        "--cafile",
+        help="Path to CA File",
+        required = False
+    )
 
     return parser
 
@@ -98,6 +103,11 @@ def main():
         settings.repofile = args.file
     else:
         settings.repofile = "repofile.txt"
+    if args.cafile:
+        settings.cafile = args.cafile
+    else:
+        settings.cafile = ''
+        
     if args.migrate:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame: 
@@ -110,7 +120,7 @@ def main():
             migrateIssues.migrate_issues(settings.targetorg, repo, issues)
             common.cleanup(repo)
     if args.behindthescenes:
-        d = requests.get(f"https://{settings.target_api_url}/repos/Capgemini-test-import/GithubMigrate", headers=settings.source_headers)
+        d = requests.get(f"https://{settings.target_api_url}/repos/Capgemini-test-import/GithubMigrate", headers=settings.source_headers, verify=cafile)
         print(f"{d.status_code} : {d.text}") 
     if args.ryesiamsure:
         reponame = common.get_repos(settings.repofile)
