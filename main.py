@@ -110,19 +110,15 @@ def main():
             migrateIssues.migrate_issues(settings.targetorg, repo, issues)
             common.cleanup(repo)
     if args.behindthescenes:
+        d = requests.get(f"https://{settings.target_api_url}/repos/Capgemini-test-import/GithubMigrate", headers=settings.source_headers)
+        print(f"{d.status_code} : {d.text}") 
+    if args.ryesiamsure:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame:
             repo = repo.rstrip()
-            data = common.get_source_repo_info(settings.sourceorg, repo)
-            print(data['description'])
-            print(data['haswiki'])
-            print(data['visibility'])
-            #with open('debug.json', 'w', encoding='utf-8') as f:
-            #    json.dump(data, f, ensure_ascii=False, indent=2)
-    if args.ryesiamsure:
-        d = requests.get(f"https://{settings.target_api_url}/repos/Capgemini-test-repo/GithubMigrate", headers=settings.target_headers)
-        if d.status_code == 204:
-            print(f"Deleted repo {repo} on target!")
-        else: 
-            print(f"Error, unable to delete {repo}.\n Code: {d.status_code} : {d.text}\n Headers:\n{d.headers}")
+            d = migrateRepo.delete_repo(settings.targetorg, repo)
+            if d.status_code == 204:
+                print(f"Deleted repo {repo} on target!")
+            else: 
+                print(f"Error, unable to delete {repo}.\n Code: {d.status_code} : {d.text}\n Headers:\n{d.headers}")
 main()
