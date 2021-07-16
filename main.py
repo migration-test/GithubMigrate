@@ -113,7 +113,7 @@ def main():
         reponame = common.get_repos(settings.repofile)
         for repo in reponame:
             repo = repo.rstrip()
-            data = common.get_source_repo_info(settings.sourceorgorg, repo)
+            data = common.get_source_repo_info(settings.sourceorg, repo)
             print(data['description'])
             print(data['haswiki'])
             print(data['visibility'])
