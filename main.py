@@ -70,7 +70,8 @@ def init_argparse():
     parser.add_argument(
         "--cafile",
         help="Path to CA File",
-        required = False
+        required = False,
+        default='.\temp-cert-dir\ca-bundle.crt'
     )
 
     return parser
@@ -103,11 +104,10 @@ def main():
         settings.repofile = args.file
     else:
         settings.repofile = "repofile.txt"
-    if args.cafile:
-        settings.cafile = args.cafile
-        subprocess.run(f"git config --global http.sslcainfo {settings.cafile}", shell=True)
-    else:
-        settings.cafile = True
+
+    settings.cafile = args.cafile
+    subprocess.run(f"git config --global http.sslcainfo {settings.cafile}", shell=True)
+ 
 
     if args.migrate:
         reponame = common.get_repos(settings.repofile)
