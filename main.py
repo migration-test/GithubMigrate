@@ -1,6 +1,6 @@
 # main.py Main entrypoint for migration
 
-import settings, common, argparse, migrateRepo, migrateIssues, migratePulls, time, random, json
+import settings, common, argparse, migrateRepo, migrateIssues, migratePulls, time, random, json, requests
 import pprint 
 
 def init_argparse():
@@ -19,9 +19,11 @@ def init_argparse():
         help="This executes the repo migration."   
     )
     parser.add_argument(
-        "--debug",
+        "--behindthescenes",
         action='store_true',
-        help="Debugging"
+        help=argparse.SUPPRESS,
+        default=False, 
+        required=False
     )
     parser.add_argument(
         "--sourcepat",
@@ -107,7 +109,7 @@ def main():
             issues = migrateIssues.get_issues(settings.sourceorg, repo)
             migrateIssues.migrate_issues(settings.targetorg, repo, issues)
             common.cleanup(repo)
-    if args.debug:
+    if args.behindthescenes:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame:
             repo = repo.rstrip()
@@ -118,12 +120,9 @@ def main():
             #with open('debug.json', 'w', encoding='utf-8') as f:
             #    json.dump(data, f, ensure_ascii=False, indent=2)
     if args.ryesiamsure:
-        reponame = common.get_repos(settings.repofile)
-        for repo in reponame:
-            repo = repo.rstrip()
-            d = migrateRepo.delete_repo(settings.targetorg, repo)
-            if d.status_code == 204:
-                print(f"Deleted repo {repo} on target!")
-            else: 
-                print(f"Error, unable to delete {repo}.\n Code: {d.status_code} : {d.text}\n Headers:\n{d.headers}")
+        d = requests.get(f"https://{settings.target_api_url}/repos/Capgemini-test-repo/GithubMigrate", headers=settings.target_headers)
+        if d.status_code == 204:
+            print(f"Deleted repo {repo} on target!")
+        else: 
+            print(f"Error, unable to delete {repo}.\n Code: {d.status_code} : {d.text}\n Headers:\n{d.headers}")
 main()
