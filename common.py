@@ -33,7 +33,7 @@ def create_repo(org, repo, source):
     reponame = repo
     orgname = org
     source = source 
-    if source['visbility'] is "public":
+    if source['visbility'] == "public":
         visbility = "internal"
     else: 
         visbility = source['visbility']
