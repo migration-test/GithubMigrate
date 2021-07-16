@@ -30,6 +30,8 @@ def get_repos(filename):
 
 # Create repo in target
 def create_repo(org, repo, source):
+    headers = settings.target_headers
+    headers['Accept'] = 'application/vnd.github.nebula-preview+json'
     reponame = repo
     orgname = org
     source = source 
@@ -49,9 +51,12 @@ def create_repo(org, repo, source):
         payload['has_issues'] = source['has_issues']
         payload['has_projects'] = source['has_projects']
         payload['has_wiki'] = source['has_wiki']
-        p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
+        p = requests.request("POST", query_url, data=json.dumps(payload), headers=headers, verify=False)
         if p.status_code == 201:
             print(f'Repository {reponame} created!')
+        else:
+            print(f'Unable to create target repository\n Status Code: {p.status_code}\n Message: {p.text}')
+            exit(1)
     except:
         print(f"ERROR: Unable to create repository {reponame}.\n Status Code: {p.status_code} : {p.text}")
 
