@@ -13,10 +13,10 @@ params = {}
 def get_issues(org, repo):
     query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}/issues"
     params = {'state': 'all', 'filter': 'all', 'direction': 'asc', 'per_page': 100, 'page': 1}
-    r = requests.get(query_url, headers=settings.source_headers, params=params, verify=False)
+    r = requests.get(query_url, headers=settings.source_headers, params=params, verify=settings.cafile)
     issues = json.loads(r.text)
     while 'next' in r.links.keys():
-        r = requests.get(r.links['next']['url'], settings.source_headers, verify=False)
+        r = requests.get(r.links['next']['url'], settings.source_headers, verify=settings.cafile)
         issues.append(json.loads(r.text))
     return issues 
 
@@ -28,7 +28,7 @@ def create_issue(org, repo, issue):
         "body": issue["body"],
     }
     print(f"Creating issue {issue['number']}")
-    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
+    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=settings.cafile)
     return p 
 
 def update_issue(org, repo, issue, num):
@@ -37,7 +37,7 @@ def update_issue(org, repo, issue, num):
         "state": issue["state"],
         "labels": issue["labels"]
     }
-    p = requests.request("PATCH", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
+    p = requests.request("PATCH", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=settings.cafile)
     return p 
 
 def get_comments(org, repo, issue):
@@ -46,10 +46,10 @@ def get_comments(org, repo, issue):
     params = {
         'per_page': 100, 'page': 1
     }    
-    p = requests.get(query_url, headers=settings.source_headers, params=params, verify=False)
+    p = requests.get(query_url, headers=settings.source_headers, params=params, verify=settings.cafile)
     c = json.loads(p.text)
     while 'next' in p.links.keys():
-        p = requests.get(p.links['next']['url'], headers=settings.source_headers, verify=False)
+        p = requests.get(p.links['next']['url'], headers=settings.source_headers, verify=settings.cafile)
         c.append(json.loads(p.text))
     return c
 
@@ -59,7 +59,7 @@ def migrate_comments(org, repo, comment, num):
         "body": comment["body"]
     }
     print(query_url)
-    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
+    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=settings.cafile)
     return p
 
 def migrate_issues(org, repo, issues):

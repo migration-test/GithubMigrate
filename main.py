@@ -106,8 +106,8 @@ def main():
     if args.cafile:
         settings.cafile = args.cafile
     else:
-        settings.cafile = ''
-        
+        settings.cafile = True
+
     if args.migrate:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame: 
@@ -120,7 +120,7 @@ def main():
             migrateIssues.migrate_issues(settings.targetorg, repo, issues)
             common.cleanup(repo)
     if args.behindthescenes:
-        d = requests.get(f"https://{settings.target_api_url}/repos/Capgemini-test-import/GithubMigrate", headers=settings.source_headers, verify=cafile)
+        d = requests.get(f"https://{settings.target_api_url}/repos/Capgemini-test-import/GithubMigrate", headers=settings.source_headers, verify=settings.cafile)
         print(f"{d.status_code} : {d.text}") 
     if args.ryesiamsure:
         reponame = common.get_repos(settings.repofile)
