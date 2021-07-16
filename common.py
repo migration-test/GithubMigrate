@@ -33,10 +33,10 @@ def create_repo(org, repo, source):
     reponame = repo
     orgname = org
     source = source 
-    if source['visbility'] == "public":
-        visbility = "internal"
+    if source['visibility'] == "public":
+        visibility = "internal"
     else: 
-        visbility = source['visbility']
+        visibility = source['visibility']
     query_url = f"https://{settings.target_api_url}/orgs/{orgname}/repos"
     try:
         payload = {}
@@ -45,7 +45,7 @@ def create_repo(org, repo, source):
         payload['description'] = source['description']
         payload['homepage'] = source['homepage']
         payload['private'] = source['private']
-        payload['visbility'] = visbility
+        payload['visibility'] = visibility
         payload['has_issues'] = source['has_issues']
         payload['has_projects'] = source['has_projects']
         payload['has_wiki'] = source['has_wiki']
