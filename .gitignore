@@ -132,5 +132,4 @@ scratch.txt
 repos.txt
 debug.json
 repofile.txt
-temp-certs-dir/ca-bundle.crt
 temp-certs-dir/github.pem
