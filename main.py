@@ -106,7 +106,7 @@ def main():
         settings.repofile = "repofile.txt"
 
     settings.cafile = args.cafile
-    subprocess.run(f"git config --global http.sslcainfo {settings.cafile}", shell=True)
+
  
 
     if args.migrate:
