@@ -1,6 +1,6 @@
 # main.py Main entrypoint for migration
 
-import settings, common, argparse, migrateRepo, migrateIssues, migratePulls, time, random, json
+import settings, common, argparse, migrateRepo, migrateIssues, migratePulls, time, random, json, requests, subprocess
 import pprint 
 
 def init_argparse():
@@ -19,9 +19,11 @@ def init_argparse():
         help="This executes the repo migration."   
     )
     parser.add_argument(
-        "--debug",
+        "--behindthescenes",
         action='store_true',
-        help="Debugging"
+        help=argparse.SUPPRESS,
+        default=False, 
+        required=False
     )
     parser.add_argument(
         "--sourcepat",
@@ -65,6 +67,12 @@ def init_argparse():
         action='store_true',
         default=False
     )
+    parser.add_argument(
+        "--cafile",
+        help="Path to CA File",
+        required = False,
+        default='.\\temp-certs-dir\ca-bundle.crt'
+    )
 
     return parser
 
@@ -96,6 +104,11 @@ def main():
         settings.repofile = args.file
     else:
         settings.repofile = "repofile.txt"
+
+    settings.cafile = args.cafile
+
+ 
+
     if args.migrate:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame: 
@@ -107,16 +120,9 @@ def main():
             issues = migrateIssues.get_issues(settings.sourceorg, repo)
             migrateIssues.migrate_issues(settings.targetorg, repo, issues)
             common.cleanup(repo)
-    if args.debug:
-        reponame = common.get_repos(settings.repofile)
-        for repo in reponame:
-            repo = repo.rstrip()
-            data = common.get_source_repo_info(settings.sourceorgorg, repo)
-            print(data['description'])
-            print(data['haswiki'])
-            print(data['visibility'])
-            #with open('debug.json', 'w', encoding='utf-8') as f:
-            #    json.dump(data, f, ensure_ascii=False, indent=2)
+    if args.behindthescenes:
+        d = requests.get(f"https://{settings.target_api_url}/repos/Capgemini-test-import/GithubMigrate", headers=settings.target_headers, verify=settings.cafile)
+        print(f"{d.status_code} : {d.text}") 
     if args.ryesiamsure:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame:
@@ -124,6 +130,8 @@ def main():
             d = migrateRepo.delete_repo(settings.targetorg, repo)
             if d.status_code == 204:
                 print(f"Deleted repo {repo} on target!")
+            elif d.status_code == 404:
+                print(f"Repository {repo} does not exist!")
             else: 
                 print(f"Error, unable to delete {repo}.\n Code: {d.status_code} : {d.text}\n Headers:\n{d.headers}")
 main()

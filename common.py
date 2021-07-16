@@ -8,7 +8,7 @@ urllib3.disable_warnings()
 
 # Check for API request rate 
 def get_rate_reset():
-    r = requests.get(f"{settings.target_api_url}/rate_limit", headers=settings.headers, verify=False)
+    r = requests.get(f"{settings.target_api_url}/rate_limit", headers=settings.headers, verify=settings.cafile)
     rate = json.loads(r.text)
     if rate["resources"]["core"]["remaining"] >= 2:
         print(f'{rate["resources"]["core"]["remaining"]} API calls until I have to take a break.')
@@ -51,7 +51,7 @@ def create_repo(org, repo, source):
         payload['has_issues'] = source['has_issues']
         payload['has_projects'] = source['has_projects']
         payload['has_wiki'] = source['has_wiki']
-        p = requests.request("POST", query_url, data=json.dumps(payload), headers=headers, verify=False)
+        p = requests.request("POST", query_url, data=json.dumps(payload), headers=headers, verify=settings.cafile)
         if p.status_code == 201:
             print(f'Repository {reponame} created!')
         else:
@@ -63,7 +63,7 @@ def create_repo(org, repo, source):
 def get_org_repos(org):
     query_url = f"https://{settings.source_api_url}/orgs/{org}/repos"
     params = { 'type': 'all', 'per_page': 100, 'page': 1 }
-    p = requests.get(query_url, headers=settings.source_headers, params=params, verify=False)
+    p = requests.get(query_url, headers=settings.source_headers, params=params, verify=settings.cafile)
     if p.status_code == 200:
         repos = json.loads(p.text)
         file = open("repofile.txt", "a+")

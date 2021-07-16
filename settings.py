@@ -40,3 +40,6 @@ def init():
 
     global target_headers
     target_headers = ""
+
+    global cafile
+    cafile = "" 
