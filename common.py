@@ -29,17 +29,34 @@ def get_repos(filename):
     return repos 
 
 # Create repo in target
-def create_repo(org, repo):
+def create_repo(org, repo, source):
+    headers = settings.target_headers
+    headers['Accept'] = 'application/vnd.github.nebula-preview+json'
     reponame = repo
     orgname = org
+    source = source 
+    if source['visibility'] == "public":
+        visibility = "internal"
+    else: 
+        visibility = source['visibility']
     query_url = f"https://{settings.target_api_url}/orgs/{orgname}/repos"
     try:
         payload = {}
         payload['name'] = f'{reponame}'
         payload['org'] = f'{orgname}'
-        p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=False)
+        payload['description'] = source['description']
+        payload['homepage'] = source['homepage']
+        payload['private'] = source['private']
+        payload['visibility'] = visibility
+        payload['has_issues'] = source['has_issues']
+        payload['has_projects'] = source['has_projects']
+        payload['has_wiki'] = source['has_wiki']
+        p = requests.request("POST", query_url, data=json.dumps(payload), headers=headers, verify=False)
         if p.status_code == 201:
             print(f'Repository {reponame} created!')
+        else:
+            print(f'Unable to create target repository\n Status Code: {p.status_code}\n Message: {p.text}')
+            exit(1)
     except:
         print(f"ERROR: Unable to create repository {reponame}.\n Status Code: {p.status_code} : {p.text}")
 
@@ -69,6 +86,21 @@ def get_org_repos(org):
             file.close()
     else:
         print(f"ERROR: {p.status_code} : {p.text}")
+
+def get_source_repo_info(org, repo):
+    headers = settings.source_headers
+    headers['Accept'] = 'application/vnd.github.nebula-preview+json'
+    query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}"
+    r = requests.get(query_url, headers=headers)
+    if r.status_code == 200:
+        resp = json.loads(r.text)
+        return resp
+    elif r.status_code == 403:
+        print(f"Access to {org}/{repo} is forbidden.")
+    else:
+        print(f"Unable to find repo {org}/{repo}")
+    
+
 
 # Check if org exists
 def get_org(orgname):

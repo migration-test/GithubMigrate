@@ -25,7 +25,8 @@ def pushTarget(org, repo, user, pat):
     targetuser = f"{user}:{pat}"
     targetrepo = f"{settings.target_instance_url}"
     cloneurl = f"https://{targetuser}@{targetrepo}/{org}/{repo}"
-    common.create_repo(org, repo)
+    source = common.get_source_repo_info(settings.sourceorg, repo)
+    common.create_repo(org, repo, source)
     subprocess.run(f'git push {cloneurl} --mirror', cwd=f'.\{repo}.git', shell=True)
 
 def delete_repo(org, repo):

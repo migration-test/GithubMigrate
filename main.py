@@ -111,7 +111,10 @@ def main():
         reponame = common.get_repos(settings.repofile)
         for repo in reponame:
             repo = repo.rstrip()
-            data = migrateIssues.get_issues(settings.sourceorg, repo)
+            data = common.get_source_repo_info(settings.sourceorgorg, repo)
+            print(data['description'])
+            print(data['haswiki'])
+            print(data['visibility'])
             #with open('debug.json', 'w', encoding='utf-8') as f:
             #    json.dump(data, f, ensure_ascii=False, indent=2)
     if args.ryesiamsure:
