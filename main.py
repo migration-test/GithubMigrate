@@ -1,6 +1,6 @@
 # main.py Main entrypoint for migration
 
-import settings, common, argparse, migrateRepo, migrateIssues, migratePulls, time, random, json, requests
+import settings, common, argparse, migrateRepo, migrateIssues, migratePulls, time, random, json, requests, subprocess
 import pprint 
 
 def init_argparse():
@@ -105,6 +105,7 @@ def main():
         settings.repofile = "repofile.txt"
     if args.cafile:
         settings.cafile = args.cafile
+        subprocess.run(f"git config --global http.sslcainfo {settings.cafile}", shell=True)
     else:
         settings.cafile = True
 
