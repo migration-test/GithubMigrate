@@ -86,3 +86,4 @@ It does not include: repository settings or the wiki
 * Images and attachments to comments/issues cannot be migrated
 * Releases are not currently migrated this will be resolved with (See [Issue 9](https://github.com/Capgemini-test-import/GithubMigrate/issues/9))
 * Wiki does not currently transfer automatically (See [Issue 7](https://github.com/Capgemini-test-import/GithubMigrate/issues/7))
+* Links to GE Github will not be automatically updated
