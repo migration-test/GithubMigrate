@@ -1,8 +1,8 @@
 import os, sys, requests, json, time, random, migratePulls
 import settings 
 import common
-import urllib3
-urllib3.disable_warnings()
+
+
 
 
 rate = ""
@@ -18,6 +18,8 @@ def get_issues(org, repo):
     while 'next' in r.links.keys():
         r = requests.get(r.links['next']['url'], settings.source_headers, verify=settings.cafile)
         issues.append(json.loads(r.text))
+    if settings.debug:
+        common.debug_mode(r.url, r.headers, r.text)
     return issues 
 
 
@@ -29,6 +31,8 @@ def create_issue(org, repo, issue):
     }
     print(f"Creating issue {issue['number']}")
     p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=settings.cafile)
+    if settings.debug:
+        common.debug_mode(p.url, p.headers, p.text)
     return p 
 
 def update_issue(org, repo, issue, num):
@@ -38,6 +42,8 @@ def update_issue(org, repo, issue, num):
         "labels": issue["labels"]
     }
     p = requests.request("PATCH", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=settings.cafile)
+    if settings.debug:
+        common.debug_mode(p.url, p.headers, p.text)
     return p 
 
 def get_comments(org, repo, issue):
@@ -51,6 +57,8 @@ def get_comments(org, repo, issue):
     while 'next' in p.links.keys():
         p = requests.get(p.links['next']['url'], headers=settings.source_headers, verify=settings.cafile)
         c.append(json.loads(p.text))
+    if settings.debug:
+        common.debug_mode(p.url, p.headers, p.text)
     return c
 
 def migrate_comments(org, repo, comment, num):
@@ -58,8 +66,9 @@ def migrate_comments(org, repo, comment, num):
     payload = {
         "body": comment["body"]
     }
-    print(query_url)
     p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=settings.cafile)
+    if settings.debug:
+        common.debug_mode(p.url, p.headers, p.text)
     return p
 
 def migrate_issues(org, repo, issues):

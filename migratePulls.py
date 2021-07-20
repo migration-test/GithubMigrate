@@ -1,8 +1,8 @@
 # Migrate pulls 
 
 from common import debug_mode
-import settings, requests, json, time, random, urllib3
-urllib3.disable_warnings()
+import settings, requests, json, time, random
+
 
 
 def get_pull(org, repo, pull):
