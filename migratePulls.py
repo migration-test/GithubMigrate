@@ -82,6 +82,8 @@ def update_pulls(org, repo, pull, num):
         "state": pull["state"],
     }
     p = requests.request("PATCH", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=settings.cafile)
+    if pull["state"] == "closed":
+        delete_branch(org, repo, pull)
     if settings.debug:
         debug_mode(p.url, p.headers, p.text)
     return p 
