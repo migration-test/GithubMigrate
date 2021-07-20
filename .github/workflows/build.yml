@@ -41,7 +41,7 @@ jobs:
             CMD_BUILD: >
               pyinstaller -F -n githubmigrate main.py && 
               cd dist/ && 
-              zip -r9 githubmigrate githubmigrate.app/
+              zip -r9 githubmigrate
             OUT_FILE_NAME: githubmigrate.zip
             ASSET_MIME: application/zip
           - os: windows-latest
