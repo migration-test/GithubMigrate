@@ -123,7 +123,7 @@ def cleanup(repo):
 
 def debug_mode(url, header, data):
     print("Executing in debug mode")
-    file =open("repofile.txt", "w")
+    file = open("debug.log", "a")
     file.write(f"URL: {url}\n HEADER: {header}\n DATA: {data}")
     file.close()
 
