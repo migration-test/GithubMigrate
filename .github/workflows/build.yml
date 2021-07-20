@@ -39,9 +39,9 @@ jobs:
           - os: macos-latest
             TARGET: macos 
             CMD_BUILD: >
-              pyinstaller -F -n githubmigrate main.py && 
-              cd dist/ && 
-              zip -r9 githubmigrate
+              pyinstaller -F -n githubmigrate main.py &&
+              cd ./dist &&
+              zip githubmigrate githubmigrate.zip
             OUT_FILE_NAME: githubmigrate.zip
             ASSET_MIME: application/zip
           - os: windows-latest
