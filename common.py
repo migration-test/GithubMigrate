@@ -121,7 +121,7 @@ def remove_writeprotect(func, path, _):
 def cleanup(repo):
     shutil.rmtree(f"{repo}.git", onerror=remove_writeprotect)
 
-def debug_mode(name, url, header, data):
+def debug_mode(url, header, data):
     print("Executing in debug mode")
     file = open("debug.log", "a")
     file.write(f"\nURL: {url}\n HEADER: {header}\n DATA: {data}\n")
