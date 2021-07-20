@@ -73,8 +73,15 @@ def init_argparse():
         required = False,
         default='.\\temp-certs-dir\ca-bundle.crt'
     )
-
+    parser.add_argument(
+        "--debug",
+        help="Debug mode",
+        required=False,
+        action='store_true',
+        default=False
+    )
     return parser
+
 
 def main():
     parser = init_argparse()
@@ -85,6 +92,7 @@ def main():
     settings.targetuser = args.targetuser
     settings.targetorg = args.targetorg
     settings.sourceorg = args.sourceorg
+    settings.debug = args.debug
     settings.target_api_url = "api.github.com"
     settings.source_api_url = "github.build.ge.com/api/v3"
     #settings.source_api_url = "api.github.com"
