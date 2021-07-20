@@ -43,3 +43,6 @@ def init():
 
     global cafile
     cafile = "" 
+
+    global debug
+    debug = ""
