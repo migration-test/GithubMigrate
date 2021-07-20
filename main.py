@@ -92,6 +92,7 @@ def main():
     settings.targetuser = args.targetuser
     settings.targetorg = args.targetorg
     settings.sourceorg = args.sourceorg
+    settings.cafile = args.cafile
     settings.debug = args.debug
     settings.target_api_url = "api.github.com"
     settings.source_api_url = "github.build.ge.com/api/v3"
@@ -112,10 +113,6 @@ def main():
         settings.repofile = args.file
     else:
         settings.repofile = "repofile.txt"
-
-    settings.cafile = args.cafile
-
- 
 
     if args.migrate:
         reponame = common.get_repos(settings.repofile)
