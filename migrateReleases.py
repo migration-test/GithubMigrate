@@ -44,7 +44,7 @@ def get_assets(org, repo, rel):
             resp.append(json.loads(p.text))
             return resp
     else:
-        print(f"Error getting assets. {p.status_code} : {p.text}")
+        print(f"Error getting assets. {p.status_code} : {p.text} : {p.url}")
     
 
 def get_asset(org, repo, asset):
@@ -58,7 +58,7 @@ def get_asset(org, repo, asset):
         save_to.write_bytes(p.content)
         return resp
     else:
-        print(f"Error getting asset. {p.status_code} : {p.text}")
+        print(f"Error getting asset. {p.status_code} : {p.text} : {p.url}")
     
 
 def upload_asset(rel, asset):
