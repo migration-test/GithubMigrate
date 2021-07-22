@@ -33,6 +33,7 @@ def create_release(org, repo, rel):
         print(f"Release {output['name']} created!")
     else: 
         print(f"Unable to create release {rel['name']}.\nStatus Code: {p.status_code} Message: {p.text}")
+    return output
 
 def get_assets(org, repo, rel):
     query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}/releases/{rel['id']}/assets"
@@ -77,13 +78,13 @@ def upload_asset(rel, asset):
     else:
         print(f"Error uploading {asset['name']}.\nStatus Code: {resp.status_code} Message: {resp.text}")
 
-def migrate_assets(repo, rel):
+def migrate_assets(repo, rel, targetrel):
     assets = get_assets(settings.sourceorg, repo, rel)
     if bool(assets) == False:
         print("No assets to migrate!")
     else: 
         for asset in assets:
-            upload_asset(settings.targetorg, rel, asset)
+            upload_asset(settings.targetorg, targetrel, asset)
 
 
 def migrate_releases(repo):
@@ -92,5 +93,5 @@ def migrate_releases(repo):
         print("No releases to migrate!")
     else: 
         for rel in rels:
-            create_release(settings.targetorg, repo, rel)
-            migrate_assets(repo, rel)
+            targetrel = create_release(settings.targetorg, repo, rel)
+            migrate_assets(repo, rel, targetrel)
