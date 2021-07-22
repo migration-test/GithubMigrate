@@ -1,7 +1,9 @@
 # main.py Main entrypoint for migration
 
-import settings, common, argparse, migrateRepo, migrateIssues, migratePulls, migrateReleases, time, random, json, requests, subprocess
-import pprint 
+import settings, common, argparse, migrateRepo, migrateIssues, migratePulls, migrateRelease, time, random, json, requests, subprocess, os
+from pathlib import Path 
+
+os.environ['REQUESTS_CA_BUNDLE'] = 'ca-bundle.crt'
 
 def init_argparse():
     parser = argparse.ArgumentParser(
@@ -68,13 +70,14 @@ def init_argparse():
         default=False
     )
     parser.add_argument(
-        "--cafile",
-        help="Path to CA File",
-        required = False,
-        default='.\\temp-certs-dir\ca-bundle.crt'
+        "--debug",
+        help="Debug mode",
+        required=False,
+        action='store_true',
+        default=False
     )
-
     return parser
+
 
 def main():
     parser = init_argparse()
@@ -85,6 +88,7 @@ def main():
     settings.targetuser = args.targetuser
     settings.targetorg = args.targetorg
     settings.sourceorg = args.sourceorg
+    settings.debug = args.debug
     settings.target_api_url = "api.github.com"
     settings.source_api_url = "github.build.ge.com/api/v3"
     #settings.source_api_url = "api.github.com"
@@ -105,10 +109,6 @@ def main():
     else:
         settings.repofile = "repofile.txt"
 
-    settings.cafile = args.cafile
-
- 
-
     if args.migrate:
         reponame = common.get_repos(settings.repofile)
         for repo in reponame: 
@@ -122,7 +122,7 @@ def main():
             migrateReleases.migrate_releases(settings.targetorg, repo)
             common.cleanup(repo)
     if args.behindthescenes:
-        d = requests.get(f"https://{settings.target_api_url}/repos/Capgemini-test-import/GithubMigrate", headers=settings.target_headers, verify=settings.cafile)
+        d = requests.get(f"https://{settings.target_api_url}/repos/Capgemini-test-import/GithubMigrate", headers=settings.target_headers)
         print(f"{d.status_code} : {d.text}") 
     if args.ryesiamsure:
         reponame = common.get_repos(settings.repofile)
