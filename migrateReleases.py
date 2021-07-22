@@ -2,7 +2,7 @@ import settings, requests, json
 
 def get_releases(org, repo):
     query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}/releases"
-    r = requests.get(query_url, headers=settings.source_headers, verify=settings.cacert)
+    r = requests.get(query_url, headers=settings.source_headers)
     if r.status_code == 200:
         resp = json.loads(r.text)
         return resp
@@ -19,7 +19,7 @@ def create_release(org, repo, rel):
     payload["prerelease"] = rel["prerelease"]
 
     query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}/releases"
-    p = requests.request("POST", query_url, headers=settings.target_headers, data=json.dumps(payload), verify=settings.cafile)
+    p = requests.request("POST", query_url, headers=settings.target_headers, data=json.dumps(payload))
     if p.status_code == 201: 
         output = json.loads(p.text)
         print(f"Release {output['name']} created!")
