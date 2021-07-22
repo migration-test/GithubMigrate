@@ -2,6 +2,7 @@ import settings, requests, json, mimetypes, os
 from pathlib import Path 
 filepath = Path('temp-filepath/org/repo/release/assets/')
 
+
 def get_releases(org, repo):
     query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}/releases"
     params = {
@@ -47,14 +48,19 @@ def get_assets(org, repo, rel):
         print(f"Error getting assets. {p.status_code} : {p.text} : {p.url}")
     return resp
 
+def check_path(path=filepath):
+    if not os.path.exists(path):
+        os.makedirs(path)
+
 def get_asset(org, repo, asset):
+    check_path()
     query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}/releases/assets/{asset['id']}"
     headers = settings.source_headers
     headers['Accept'] = 'application/octet-stream'
     p = requests.request("GET", query_url, headers=settings.source_headers)
     if p.status_code == 200 or p.status_code == 302:
         resp = json.loads(p.text)
-        save_to = f"{filepath}/{asset['name']}"
+        save_to = f"{filepath}{asset['name']}"
         save_to.write_bytes(p.content)
     else:
         print(f"Error getting asset. {p.status_code} : {p.text} : {p.url}")
