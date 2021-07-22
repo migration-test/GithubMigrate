@@ -1,6 +1,6 @@
 # main.py Main entrypoint for migration
 
-import settings, common, argparse, migrateRepo, migrateIssues, migratePulls, migrateRelease, time, random, json, requests, subprocess, os
+import settings, common, argparse, migrateRepo, migrateIssues, migratePulls, migrateReleases, time, random, json, requests, subprocess, os
 from pathlib import Path 
 
 os.environ['REQUESTS_CA_BUNDLE'] = 'ca-bundle.crt'
