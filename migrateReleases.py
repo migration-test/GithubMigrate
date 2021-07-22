@@ -50,7 +50,7 @@ def get_assets(org, repo, rel):
 
 def check_path(path):
     if not Path.exists(path):
-        Path.mkdir(path)
+        Path.mkdir(path, parents=True, exist_ok=True)
 
 def get_asset(org, repo, asset):
     query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}/releases/assets/{asset['id']}"
