@@ -42,10 +42,9 @@ def get_assets(org, repo, rel):
         while 'next' in p.links.keys():
             p = requests.request("GET", resp['next']['url'], headers=settings.source_headers)
             resp.append(json.loads(p.text))
-            return resp
     else:
         print(f"Error getting assets. {p.status_code} : {p.text} : {p.url}")
-    
+    return resp
 
 def get_asset(org, repo, asset):
     query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}/releases/assets/{asset['id']}"
@@ -56,9 +55,9 @@ def get_asset(org, repo, asset):
         resp = json.loads(p.text)
         save_to = f"{filepath}/{asset['name']}"
         save_to.write_bytes(p.content)
-        return resp
     else:
         print(f"Error getting asset. {p.status_code} : {p.text} : {p.url}")
+    return resp
     
 
 def upload_asset(rel, asset):
