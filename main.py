@@ -119,7 +119,7 @@ def main():
             migrateRepo.pushTarget(settings.targetorg, repo, settings.targetuser, settings.targettoken)
             issues = migrateIssues.get_issues(settings.sourceorg, repo)
             migrateIssues.migrate_issues(settings.targetorg, repo, issues)
-            migrateReleases.migrate_releases(settings.targetorg, repo)
+            migrateReleases.migrate_releases(settings.sourceorg, repo)
             common.cleanup(repo)
     if args.behindthescenes:
         d = requests.get(f"https://{settings.target_api_url}/repos/Capgemini-test-import/GithubMigrate", headers=settings.target_headers)

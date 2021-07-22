@@ -10,7 +10,7 @@ def get_releases(org, repo):
         resp = json.loads(p.text)
         while 'next' in resp.keys():
             p = requests.request("GET", resp['next']['url'], headers=settings.source_headers)
-            resp.append(json.loads(r.text))
+            resp.append(json.loads(p.text))
     else: 
         print(f"Error getting release. {p.status_code} : {p.text} : {p.url}")
     return resp
@@ -38,5 +38,5 @@ def migrate_releases(org, repo):
         print("No releases to migrate!")
     else: 
         for rel in rels:
-            create_release(org, repo, rel)
+            create_release(settings.targetorg, repo, rel)
             
