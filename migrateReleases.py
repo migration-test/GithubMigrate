@@ -34,7 +34,7 @@ def create_release(org, repo, rel):
 
 def migrate_releases(org, repo):
     rels = get_releases(org, repo)
-    if len(rels) == 0:
+    if bool(rels) == False:
         print("No releases to migrate!")
     else: 
         for rel in rels:
