@@ -1,6 +1,6 @@
 import settings, requests, json, mimetypes, os
 from pathlib import Path 
-filepath = Path('temp-filepath/org/repo/release/assets/')
+filepath = Path(f"{Path.cwd()}/tmp/releases/assets/")
 
 
 def get_releases(org, repo):
@@ -49,8 +49,8 @@ def get_assets(org, repo, rel):
     return resp
 
 def check_path(path=filepath):
-    if not os.path.exists(path):
-        os.makedirs(path)
+    if not Path.exists(path):
+        Path.mkdir(path)
 
 def get_asset(org, repo, asset):
     check_path()
