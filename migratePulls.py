@@ -73,14 +73,13 @@ def create_pulls(org, repo, pull):
             "base": f"pr{pull['number']}base",
             "maintainer_can_modify": True 
         }
-
-    #if pull["base"]["sha"] == pull["head"]["sha"]:
-    #    payload["head"] = 'refs/heads/master'
-    #else:
-    #    payload["head"] = f"pr{pull['number']}head"
+        if pull["base"]["sha"] == pull["head"]["sha"]:
+            payload["head"] = 'refs/heads/master'
+        else:
+            payload["head"] = f"pr{pull['number']}head"
     p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers)
     pp = p.json()
-    print(f"Created pull {pp['number']}")
+    #print(f"Created pull {pp['number']}")
     if settings.debug:
         debug_mode(p.url, p.headers, p.text)
     return p 
