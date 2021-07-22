@@ -77,7 +77,7 @@ def upload_asset(rel, asset):
         print(f"Error uploading {asset['name']}.\nStatus Code: {resp.status_code} Message: {resp.text}")
 
 def migrate_assets(org, repo, rel):
-    assets = get_assets(org, rel)
+    assets = get_assets(org, repo, rel)
     if bool(assets) == False:
         print("No assets to migrate!")
     else: 
