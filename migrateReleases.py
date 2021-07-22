@@ -94,4 +94,4 @@ def migrate_releases(repo):
     else: 
         for rel in rels:
             create_release(settings.targetorg, repo, rel)
-            migrate_assets(settings.targetorg, repo, rel)
+            migrate_assets(repo, rel)
