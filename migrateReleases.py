@@ -2,12 +2,18 @@ import settings, requests, json
 
 def get_releases(org, repo):
     query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}/releases"
-    r = requests.get(query_url, headers=settings.source_headers)
-    if r.status_code == 200:
-        resp = json.loads(r.text)
-        return resp
+    params = {
+        'per_page': 100, 'page': 1
+    } 
+    p = requests.request("GET", query_url, headers=settings.source_headers, params=params)
+    if p.status_code == 200:
+        resp = json.loads(p.text)
+        while 'next' in resp.keys():
+            r = requests.request("GET", resp['next']['url'], headers=settings.source_headers, params=params)
+            resp.append(json.loads(r.text))
     else: 
-        print(f"Error getting release. {r.status_code} : {r.text}")
+        print(f"Error getting release. {p.status_code} : {p.text}")
+    return resp
 
 def create_release(org, repo, rel):
     payload = {}
@@ -28,7 +34,7 @@ def create_release(org, repo, rel):
 
 def migrate_releases(org, repo):
     rels = get_releases(org, repo)
-    if len(rels) ==0:
+    if len(rels) == 0:
         print("No releases to migrate!")
     else: 
         for rel in rels:
