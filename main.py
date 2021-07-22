@@ -1,7 +1,9 @@
 # main.py Main entrypoint for migration
 
-import settings, common, argparse, migrateRepo, migrateIssues, migratePulls, time, random, json, requests, subprocess
-import pprint 
+import settings, common, argparse, migrateRepo, migrateIssues, migratePulls, time, random, json, requests, subprocess, os
+from pathlib import Path 
+
+os.environ['REQUESTS_CA_BUNDLE'] = settings.cafile
 
 def init_argparse():
     parser = argparse.ArgumentParser(
@@ -68,12 +70,6 @@ def init_argparse():
         default=False
     )
     parser.add_argument(
-        "--cafile",
-        help="Path to CA File",
-        required = False,
-        default='.\\temp-certs-dir\ca-bundle.crt'
-    )
-    parser.add_argument(
         "--debug",
         help="Debug mode",
         required=False,
@@ -92,7 +88,7 @@ def main():
     settings.targetuser = args.targetuser
     settings.targetorg = args.targetorg
     settings.sourceorg = args.sourceorg
-    settings.cafile = args.cafile
+    settings.cafile = Path("temp-certs-dir/ca-bundle.crt")
     settings.debug = args.debug
     settings.target_api_url = "api.github.com"
     settings.source_api_url = "github.build.ge.com/api/v3"
