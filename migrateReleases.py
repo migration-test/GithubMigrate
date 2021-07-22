@@ -9,10 +9,10 @@ def get_releases(org, repo):
     if p.status_code == 200:
         resp = json.loads(p.text)
         while 'next' in resp.keys():
-            r = requests.request("GET", resp['next']['url'], headers=settings.source_headers, params=params)
+            p = requests.request("GET", resp['next']['url'], headers=settings.source_headers)
             resp.append(json.loads(r.text))
     else: 
-        print(f"Error getting release. {p.status_code} : {p.text}")
+        print(f"Error getting release. {p.status_code} : {p.text} : {p.url}")
     return resp
 
 def create_release(org, repo, rel):
