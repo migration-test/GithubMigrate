@@ -48,12 +48,11 @@ def get_assets(org, repo, rel):
         print(f"Error getting assets. {p.status_code} : {p.text} : {p.url}")
     return resp
 
-def check_path(path=filepath):
+def check_path(path):
     if not Path.exists(path):
         Path.mkdir(path)
 
 def get_asset(org, repo, asset):
-    check_path()
     query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}/releases/assets/{asset['id']}"
     headers = settings.source_headers
     headers['Accept'] = 'application/octet-stream'
@@ -76,7 +75,7 @@ def upload_asset(rel, asset):
     params = {
         'name': asset['name']
     }
-    data = open(f"{filepath}/{asset['name']}", 'rb').read()
+    data = open(f"{filepath}{asset['name']}", 'rb').read()
 
     resp = requests.request("POST", rel['upload_url'], headers=header, params=params, data=data)
     if resp.status_code == 201:
@@ -94,6 +93,7 @@ def migrate_assets(repo, rel, targetrel):
 
 
 def migrate_releases(repo):
+    check_path(filepath)
     rels = get_releases(settings.sourceorg, repo)
     if bool(rels) == False:
         print("No releases to migrate!")
