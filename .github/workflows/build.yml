@@ -46,7 +46,7 @@ jobs:
             ASSET_MIME: application/zip
           - os: windows-latest
             TARGET: windows
-            CMD_BUILD: pyinstaller -F --add-data ca-bundle.crt;. -n githubmigrate main.py
+            CMD_BUILD: pyinstaller -F --add-data "ca-bundle.crt;." -n githubmigrate main.py
             OUT_FILE_NAME: githubmigrate.exe
             ASSET_MIME: application/vnd.microsoft.portable-executable
     steps:
