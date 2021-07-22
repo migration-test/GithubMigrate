@@ -78,8 +78,8 @@ def upload_asset(rel, asset):
     else:
         print(f"Error uploading {asset['name']}.\nStatus Code: {resp.status_code} Message: {resp.text}")
 
-def migrate_assets(org, repo, rel):
-    assets = get_assets(org, repo, rel)
+def migrate_assets(repo, rel):
+    assets = get_assets(settings.sourceorg, repo, rel)
     if bool(assets) == False:
         print("No assets to migrate!")
     else: 
@@ -87,8 +87,8 @@ def migrate_assets(org, repo, rel):
             upload_asset(settings.targetorg, rel, asset)
 
 
-def migrate_releases(org, repo):
-    rels = get_releases(org, repo)
+def migrate_releases(repo):
+    rels = get_releases(settings.sourceorg, repo)
     if bool(rels) == False:
         print("No releases to migrate!")
     else: 
