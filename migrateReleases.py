@@ -8,7 +8,7 @@ def get_releases(org, repo):
     p = requests.request("GET", query_url, headers=settings.source_headers, params=params)
     if p.status_code == 200:
         resp = json.loads(p.text)
-        while 'next' in resp.keys():
+        while 'next' in resp.links.keys():
             p = requests.request("GET", resp['next']['url'], headers=settings.source_headers)
             resp.append(json.loads(p.text))
     else: 
