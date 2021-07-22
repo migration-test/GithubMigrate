@@ -57,18 +57,27 @@ def delete_branch(org, repo, pull):
 
 def create_pulls(org, repo, pull):
     query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}/pulls"  
-    payload = {
-        "title": pull["title"],
-        "body": pull["body"],
-        "head": "",
-        "base": f"pr{pull['number']}base",
-        "maintainer_can_modify": True 
-    }
-
-    if pull["base"]["sha"] == pull["head"]["sha"]:
-        payload["head"] = 'refs/heads/master'
+    if pull['state'] == "open":
+        payload = {
+            "title": pull['title'],
+            "body": pull['body'],
+            "head": pull['head']['ref'],
+            "base": pull['base']['ref'],
+            "maintainer_can_modify": True
+        }
     else:
-        payload["head"] = f"pr{pull['number']}head"
+        payload = {
+            "title": pull["title"],
+            "body": pull["body"],
+            "head": "",
+            "base": f"pr{pull['number']}base",
+            "maintainer_can_modify": True 
+        }
+
+    #if pull["base"]["sha"] == pull["head"]["sha"]:
+    #    payload["head"] = 'refs/heads/master'
+    #else:
+    #    payload["head"] = f"pr{pull['number']}head"
     p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers)
     pp = p.json()
     print(f"Created pull {pp['number']}")
