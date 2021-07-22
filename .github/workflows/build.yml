@@ -41,7 +41,7 @@ jobs:
             CMD_BUILD: >
               pyinstaller -F --add-data ca-bundle.crt:. -n githubmigrate main.py &&
               cd ./dist &&
-              zip githubmigrate-linux.zip githubmigrate
+              zip githubmigrate.zip githubmigrate
             OUT_FILE_NAME: githubmigrate.zip
             ASSET_MIME: application/zip
           - os: windows-latest
