@@ -36,8 +36,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: macos-latest
-            TARGET: macos 
+          - os: ubuntu-latest
+            TARGET: linux
             CMD_BUILD: >
               pyinstaller -F -n githubmigrate main.py &&
               cd ./dist &&
