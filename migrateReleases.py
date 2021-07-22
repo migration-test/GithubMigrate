@@ -84,7 +84,7 @@ def migrate_assets(repo, rel, targetrel):
         print("No assets to migrate!")
     else: 
         for asset in assets:
-            upload_asset(settings.targetorg, targetrel, asset)
+            upload_asset(targetrel, asset)
 
 
 def migrate_releases(repo):
