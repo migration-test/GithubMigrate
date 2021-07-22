@@ -1,6 +1,6 @@
 # main.py Main entrypoint for migration
 
-import settings, common, argparse, migrateRepo, migrateIssues, migratePulls, time, random, json, requests, subprocess, os
+import settings, common, argparse, migrateRepo, migrateIssues, migratePulls, migrateReleases, time, random, json, requests, subprocess, os
 from pathlib import Path 
 
 os.environ['REQUESTS_CA_BUNDLE'] = 'ca-bundle.crt'
@@ -119,6 +119,7 @@ def main():
             migrateRepo.pushTarget(settings.targetorg, repo, settings.targetuser, settings.targettoken)
             issues = migrateIssues.get_issues(settings.sourceorg, repo)
             migrateIssues.migrate_issues(settings.targetorg, repo, issues)
+            migrateReleases.migrate_releases(settings.targetorg, repo)
             common.cleanup(repo)
     if args.behindthescenes:
         d = requests.get(f"https://{settings.target_api_url}/repos/Capgemini-test-import/GithubMigrate", headers=settings.target_headers)
