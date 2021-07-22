@@ -3,7 +3,7 @@
 import settings, common, argparse, migrateRepo, migrateIssues, migratePulls, time, random, json, requests, subprocess, os
 from pathlib import Path 
 
-os.environ['REQUESTS_CA_BUNDLE'] = settings.cafile
+os.environ['REQUESTS_CA_BUNDLE'] = 'ca-bundle.crt'
 
 def init_argparse():
     parser = argparse.ArgumentParser(
@@ -88,7 +88,6 @@ def main():
     settings.targetuser = args.targetuser
     settings.targetorg = args.targetorg
     settings.sourceorg = args.sourceorg
-    settings.cafile = Path("temp-certs-dir/ca-bundle.crt")
     settings.debug = args.debug
     settings.target_api_url = "api.github.com"
     settings.source_api_url = "github.build.ge.com/api/v3"
