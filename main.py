@@ -121,7 +121,7 @@ def main():
             migrateIssues.migrate_issues(settings.targetorg, repo, issues)
             common.cleanup(repo)
     if args.behindthescenes:
-        d = requests.get(f"https://{settings.target_api_url}/repos/Capgemini-test-import/GithubMigrate", headers=settings.target_headers, verify=settings.cafile)
+        d = requests.get(f"https://{settings.target_api_url}/repos/Capgemini-test-import/GithubMigrate", headers=settings.target_headers)
         print(f"{d.status_code} : {d.text}") 
     if args.ryesiamsure:
         reponame = common.get_repos(settings.repofile)

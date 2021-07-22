@@ -13,10 +13,10 @@ params = {}
 def get_issues(org, repo):
     query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}/issues"
     params = {'state': 'all', 'filter': 'all', 'direction': 'asc', 'per_page': 100, 'page': 1}
-    r = requests.get(query_url, headers=settings.source_headers, params=params, verify=settings.cafile)
+    r = requests.get(query_url, headers=settings.source_headers, params=params)
     issues = json.loads(r.text)
     while 'next' in r.links.keys():
-        r = requests.get(r.links['next']['url'], settings.source_headers, verify=settings.cafile)
+        r = requests.get(r.links['next']['url'], settings.source_headers)
         issues.append(json.loads(r.text))
     if settings.debug:
         common.debug_mode(r.url, r.headers, r.text)
@@ -30,7 +30,7 @@ def create_issue(org, repo, issue):
         "body": issue["body"],
     }
     print(f"Creating issue {issue['number']}")
-    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=settings.cafile)
+    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers)
     if settings.debug:
         common.debug_mode(p.url, p.headers, p.text)
     return p 
@@ -41,7 +41,7 @@ def update_issue(org, repo, issue, num):
         "state": issue["state"],
         "labels": issue["labels"]
     }
-    p = requests.request("PATCH", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=settings.cafile)
+    p = requests.request("PATCH", query_url, data=json.dumps(payload), headers=settings.target_headers)
     if settings.debug:
         common.debug_mode(p.url, p.headers, p.text)
     return p 
@@ -52,10 +52,10 @@ def get_comments(org, repo, issue):
     params = {
         'per_page': 100, 'page': 1
     }    
-    p = requests.get(query_url, headers=settings.source_headers, params=params, verify=settings.cafile)
+    p = requests.get(query_url, headers=settings.source_headers, params=params)
     c = json.loads(p.text)
     while 'next' in p.links.keys():
-        p = requests.get(p.links['next']['url'], headers=settings.source_headers, verify=settings.cafile)
+        p = requests.get(p.links['next']['url'], headers=settings.source_headers)
         c.append(json.loads(p.text))
     if settings.debug:
         common.debug_mode(p.url, p.headers, p.text)
@@ -66,7 +66,7 @@ def migrate_comments(org, repo, comment, num):
     payload = {
         "body": comment["body"]
     }
-    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=settings.cafile)
+    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers)
     if settings.debug:
         common.debug_mode(p.url, p.headers, p.text)
     return p

@@ -9,7 +9,7 @@ def get_pull(org, repo, pull):
     query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}/pulls/{pull}"
     params = {}
     print(f"Getting PR number {pull} from {query_url}")
-    r = requests.get(query_url, headers=settings.source_headers, params=params, verify=settings.cafile)
+    r = requests.get(query_url, headers=settings.source_headers, params=params)
     pull = json.loads(r.text)
     if settings.debug:
         debug_mode(r.url, r.headers, r.text)
@@ -21,7 +21,7 @@ def create_branch(org, repo, pull):
         "ref": f"refs/heads/pr{pull['number']}base",
         "sha": f"{pull['base']['sha']}"
     }
-    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=settings.cafile)
+    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers)
     if settings.debug:
         debug_mode(p.url, p.headers, p.text)
     return p 
@@ -32,7 +32,7 @@ def create_head_branch(org, repo, pull):
         "ref": f"refs/heads/pr{pull['number']}head",
         "sha": f"{pull['head']['sha']}"
     }
-    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=settings.cafile)
+    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers)
     if settings.debug:
         debug_mode(p.url, p.headers, p.text)
     return p 
@@ -40,13 +40,13 @@ def create_head_branch(org, repo, pull):
 def delete_branch(org, repo, pull):
     head_query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}/git/refs/heads/pr{pull['number']}head"
     base_query_url = f"https://{settings.target_api_url}/repos/{org}/{repo}/git/refs/heads/pr{pull['number']}base"
-    h = requests.delete(head_query_url, headers=settings.target_headers, verify=settings.cafile)
+    h = requests.delete(head_query_url, headers=settings.target_headers)
 
     if h.status_code == 204: 
         print(f"Head branch for PR{pull['number']} deleted!")
     else: 
         print(f"Unable to remove head branch for PR{pull['number']}, you will need to delete manually.\n{h.status_code} : {h.text}")
-    b = requests.delete(base_query_url, headers=settings.target_headers, verify=settings.cafile)
+    b = requests.delete(base_query_url, headers=settings.target_headers)
     if b.status_code == 204: 
         print(f"Base branch for PR{pull['number']} deleted!")
     else: 
@@ -69,7 +69,7 @@ def create_pulls(org, repo, pull):
         payload["head"] = 'refs/heads/master'
     else:
         payload["head"] = f"pr{pull['number']}head"
-    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=settings.cafile)
+    p = requests.request("POST", query_url, data=json.dumps(payload), headers=settings.target_headers)
     pp = p.json()
     print(f"Created pull {pp['number']}")
     if settings.debug:
@@ -81,7 +81,7 @@ def update_pulls(org, repo, pull, num):
     payload = {
         "state": pull["state"],
     }
-    p = requests.request("PATCH", query_url, data=json.dumps(payload), headers=settings.target_headers, verify=settings.cafile)
+    p = requests.request("PATCH", query_url, data=json.dumps(payload), headers=settings.target_headers)
     if pull["state"] == "closed":
         delete_branch(org, repo, pull)
     if settings.debug:
