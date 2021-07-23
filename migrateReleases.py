@@ -67,7 +67,7 @@ def get_asset(org, repo, asset):
             else:
                 dl = 0
                 total_length = int(total_length)
-                for chunk in p.iter_content(chunk_size=total_length/100):
+                for chunk in p.iter_content(chunk_size=1024):
                     dl += len(chunk)
                     f.write(chunk)
                     done = int(50 * dl / total_length)
