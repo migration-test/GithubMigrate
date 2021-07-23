@@ -60,7 +60,7 @@ def get_asset(org, repo, asset):
     with open(save_to, 'wb') as f:
         p = requests.request("GET", query_url, headers=settings.source_headers, stream=True, allow_redirects=True)
         if p.status_code == 200 or p.status_code == 302:
-            print(f"Downloading {filepath}{asset['name']}")
+            print(f"Downloading {filepath}{asset['name']} from {p.url}")
             total_length = p.headers.get('content-length')
             if total_length is None:
                 f.write(p.content)
