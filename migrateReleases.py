@@ -89,6 +89,7 @@ def migrate_assets(repo, rel, targetrel):
         print("No assets to migrate!")
     else: 
         for asset in assets:
+            get_asset(settings.sourceorg, repo, asset)
             upload_asset(targetrel, asset)
 
 
