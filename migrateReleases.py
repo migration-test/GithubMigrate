@@ -60,7 +60,9 @@ def get_asset(org, repo, asset):
     if p.status_code == 200 or p.status_code == 302:
         resp = json.loads(p.text)
         save_to = f"{filepath}{asset['name']}"
-        save_to.write_bytes(p.content)
+        with open(save_to, 'wb') as f:
+            f.write(p.content)
+        f.close()
     else:
         print(f"Error getting asset. {p.status_code} : {p.text} : {p.url}")
     return resp
