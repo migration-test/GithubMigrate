@@ -1,4 +1,4 @@
-import settings, requests, json, mimetypes, os
+import settings, requests, json, mimetypes, sys
 from pathlib import Path 
 filepath = Path(f"{Path.cwd()}/tmp/releases/assets/")
 
@@ -56,15 +56,25 @@ def get_asset(org, repo, asset):
     query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}/releases/assets/{asset['id']}"
     headers = settings.source_headers
     headers['Accept'] = 'application/octet-stream'
-    p = requests.request("GET", query_url, headers=settings.source_headers, stream=True)
-    if p.status_code == 200 or p.status_code == 302:
-        #resp = json.loads(p.text)
-        save_to = f"{filepath}{asset['name']}"
-        with open(save_to, 'wb') as f:
-            for chunk in p.iter_content(chunk_size=1024):
-                f.write(chunk)
-    else:
-        print(f"Error getting asset. {p.status_code} : {p.text} : {p.url}")
+    save_to = f"{filepath}{asset['name']}"
+    with open(save_to, 'wb') as f:
+        p = requests.request("GET", query_url, headers=settings.source_headers, stream=True, allow_redirects=True)
+        if p.status_code == 200 or p.status_code == 302:
+            print(f"Downloading {filepath}{asset['name']}")
+            total_length = p.headers.get('content-length')
+            if total_length is None:
+                f.write(p.content)
+            else:
+                dl = 0
+                total_length = int(total_length)
+                for chunk in p.iter_content(chunk_size=total_length/100):
+                    dl += len(chunk)
+                    f.write(chunk)
+                    done = int(50 * dl / total_length)
+                    sys.stdout.write(f"\r[{'=' * done}{' ' * (50-done)}] {done}%")
+                    sys.stdout.flush()
+        else:
+            print(f"Error getting asset. {p.status_code} : {p.text} : {p.url}")
     return p
     
 
