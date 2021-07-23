@@ -58,14 +58,14 @@ def get_asset(org, repo, asset):
     headers['Accept'] = 'application/octet-stream'
     p = requests.request("GET", query_url, headers=settings.source_headers)
     if p.status_code == 200 or p.status_code == 302:
-        resp = json.loads(p.text)
+        #resp = json.loads(p.text)
         save_to = f"{filepath}{asset['name']}"
         with open(save_to, 'wb') as f:
             f.write(p.content)
         f.close()
     else:
         print(f"Error getting asset. {p.status_code} : {p.text} : {p.url}")
-    return resp
+    return p
     
 
 def upload_asset(rel, asset):
