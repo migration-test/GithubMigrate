@@ -56,13 +56,13 @@ def get_asset(org, repo, asset):
     query_url = f"https://{settings.source_api_url}/repos/{org}/{repo}/releases/assets/{asset['id']}"
     headers = settings.source_headers
     headers['Accept'] = 'application/octet-stream'
-    p = requests.request("GET", query_url, headers=settings.source_headers)
+    p = requests.request("GET", query_url, headers=settings.source_headers, stream=True)
     if p.status_code == 200 or p.status_code == 302:
         #resp = json.loads(p.text)
         save_to = f"{filepath}{asset['name']}"
         with open(save_to, 'wb') as f:
-            f.write(p.content)
-        f.close()
+            for chunk in p.iter_content(chunk_size=1024):
+                f.write(chunk)
     else:
         print(f"Error getting asset. {p.status_code} : {p.text} : {p.url}")
     return p
